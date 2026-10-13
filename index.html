@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FibraSol - Credenciamento Oficial no Evento</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fibra: {
+              blue: '#002B66',
+              cyan: '#0066CC',
+              sky: '#00A8FF',
+              yellow: '#FFC800',
+              sand: '#F7E7CE',
+              beach: '#008080'
+            }
+          },
+          animation: {
+            'float-wave': 'floatWave 6s ease-in-out infinite',
+            'mascot-bounce': 'mascotBounce 3s ease-in-out infinite',
+            'sun-glow': 'sunGlow 4s ease-in-out infinite',
+            'marquee': 'marquee 25s linear infinite'
+          },
+          keyframes: {
+            floatWave: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-8px) rotate(1deg)' }
+            },
+            mascotBounce: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' }
+            },
+            sunGlow: {
+              '0%, 100%': { opacity: 0.8, transform: 'scale(1)' },
+              '50%': { opacity: 1, transform: 'scale(1.1)' }
+            },
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body class="bg-slate-900 text-slate-800 antialiased min-h-screen relative flex flex-col selection:bg-fibra-yellow selection:text-fibra-blue">
+
+  <!-- CABEÇALHO COM EFEITO PRAIA DA FIBRASOL -->
+  <header class="relative bg-gradient-to-r from-fibra-blue via-fibra-cyan to-fibra-blue text-white overflow-hidden shadow-2xl border-b-4 border-fibra-yellow">
+    <!-- FEIXES DE LUZ EM MOVIMENTO E VENTO — SEM DESENHAR UM SEGUNDO SOL -->
+    <div class="header-light-beam" aria-hidden="true"></div>
+    <div class="header-light-beam header-light-beam-two" aria-hidden="true"></div>
+    <div class="header-light-beam header-light-beam-three" aria-hidden="true"></div>
+    <div class="header-wind header-wind-one" aria-hidden="true"></div>
+    <div class="header-wind header-wind-two" aria-hidden="true"></div>
+    <div class="header-wind header-wind-three" aria-hidden="true"></div>
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-fibra-sky/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+      
+      
+<!-- MARCA OFICIAL FIBRASOL + MASCOTE + SLOGAN -->
+<div class="fibrasol-header-brand">
+
+    <img
+        src="imagens/mascote-fibrasol.png"
+        alt="Mascote FibraSol"
+        class="fibrasol-header-mascot"
+    >
+
+    <img
+        src="https://www.fibrasol.com.br/wp-content/themes/fibrasol/assets/images/marca.svg"
+        alt="FibraSol"
+        class="fibrasol-header-logo-oficial"
+    >
+
+    <div class="fibrasol-header-slogan">
+        QUALIDADE E AGILIDADE NA ENTREGA
+    </div>
+
+</div>
+
+
+      <!-- BOTÕES DE NAVEGAÇÃO / TOTEM DA EQUIPE -->
+      <div class="flex items-center gap-2">
+        <button onclick="switchTab('cadastro')" id="nav-cadastro" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-fibra-yellow text-fibra-blue shadow-lg hover:bg-yellow-300 transition-all flex items-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4"></i> Cadastro
+        </button>
+        <button onclick="switchTab('totem')" id="nav-totem" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all flex items-center gap-2">
+          <i data-lucide="qr-code" class="w-4 h-4"></i> Totem QR
+        </button>
+        <button onclick="openAdminAuth()" id="nav-admin" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4"></i> Painel Admin
+        </button>
+      </div>
+
+    </div>
+
+    <!-- LETREIRO INFINITO: DUAS CÓPIAS IGUAIS PARA LOOP SEM SALTO -->
+    <div class="fibrasol-marquee relative z-10 bg-fibra-blue/90 border-t border-white/10 py-2 text-xs font-black uppercase tracking-wider text-fibra-yellow" aria-label="Mensagens da FibraSol">
+      <div class="fibrasol-marquee-trilho">
+        <div class="fibrasol-marquee-grupo">
+          <span>☀️ A FIBRA NO DNA NORDESTINO</span>
+          <span class="fibrasol-marquee-separador">•</span>
+          <span>🌊 CONECTANDO PESSOAS E CRIANDO VALOR</span>
+          <span class="fibrasol-marquee-separador">•</span>
+          <span>💙 ORGULHO DE SER FIBRASOL!</span>
+          <span class="fibrasol-marquee-separador">•</span>
+        </div>
+        <div class="fibrasol-marquee-grupo" aria-hidden="true">
+          <span>☀️ A FIBRA NO DNA NORDESTINO</span>
+          <span class="fibrasol-marquee-separador">•</span>
+          <span>🌊 CONECTANDO PESSOAS E CRIANDO VALOR</span>
+          <span class="fibrasol-marquee-separador">•</span>
+          <span>💙 ORGULHO DE SER FIBRASOL!</span>
+          <span class="fibrasol-marquee-separador">•</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- SEÇÃO 1: FORMULÁRIO DE CADASTRO -->
+    <div id="section-cadastro" class="space-y-6">
+      
+      <!-- FRASE DE IMPACTO — SEM BALÃO, SEM SUBTÍTULO E SEM AUMENTAR O CABEÇALHO -->
+      <div class="text-center py-1">
+        <h1>O NORDESTE CONECTADO AO FUTURO</h1>
+      </div>
+
+      
+<!-- FUNDO DE PRAIA ANIMADO COM MASCOTE EM DESTAQUE -->
+<div class="beach-atmosphere" aria-hidden="true">
+  <div class="beach-sun"></div>
+
+  <div class="beach-cloud cloud-one"></div>
+  <div class="beach-cloud cloud-two"></div>
+
+  <div class="beach-wind wind-one"></div>
+  <div class="beach-wind wind-two"></div>
+  <div class="beach-wind wind-three"></div>
+
+  <div class="beach-sea"></div>
+
+  <div class="beach-wave"></div>
+  <div class="beach-wave wave-two"></div>
+
+  <div class="beach-sand"></div>
+
+  </div>
+
+  
+      <!-- FORMULÁRIO CENTRALIZADO SOBRE O CENÁRIO PRAIANO -->
+        <!-- FORMULÁRIO DE CADASTRO PADRONIZADO -->
+        <div class="beach-form-wrap">
+          <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/40 flex flex-col justify-between relative overflow-hidden">
+          <div>
+            <div class="flex items-center gap-3 border-b border-slate-200/80 pb-4 mb-6">
+              <div class="p-3 bg-fibra-blue text-fibra-yellow rounded-2xl shadow-md">
+                <i data-lucide="clipboard-edit" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h2 class="text-xl font-extrabold text-fibra-blue">Cadastro do Participante</h2>
+                <p class="text-xs text-slate-500">Preencha seus dados para conectar-se conosco</p>
+              </div>
+            </div>
+
+            <form id="form-cadastro" onsubmit="salvarCadastro(event)" class="space-y-4">
+              
+
+<!-- NOME COMPLETO E RAZÃO SOCIAL -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+  <!-- NOME COMPLETO -->
+  <div>
+    <label for="campo-nome" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+      Nome Completo *
+    </label>
+
+    <div class="relative">
+      <i data-lucide="user" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+
+      <input
+        type="text"
+        id="campo-nome"
+        required
+        placeholder="Ex: João da Silva"
+        class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-fibra-cyan focus:bg-white outline-none transition-all font-medium text-slate-800 text-sm"
+      >
+    </div>
+  </div>
+
+  <!-- RAZÃO SOCIAL -->
+  <div>
+    <label for="campo-razao-social" class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+      Razão Social
+    </label>
+
+    <div class="relative">
+      <i data-lucide="building-2" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+
+      <input
+        type="text"
+        id="campo-razao-social"
+        name="razaoSocial"
+        placeholder="Nome da empresa"
+        class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-fibra-cyan focus:bg-white outline-none transition-all font-medium text-slate-800 text-sm"
+      >
+    </div>
+  </div>
+
+</div>
+
+              <!-- TELEFONE -->
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+                  Telefone / WhatsApp *
+                </label>
+                <div class="relative">
+                  <i data-lucide="phone" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input type="tel" id="campo-telefone" required placeholder="(83) 99999-9999" oninput="mascaraTelefone(this)" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-fibra-cyan focus:bg-white outline-none transition-all font-medium text-slate-800 text-sm">
+                </div>
+              </div>
+
+              <!-- ENDEREÇO -->
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-1">
+                  Endereço Residencial / Comercial *
+                </label>
+                <div class="relative">
+                  <i data-lucide="map-pin" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <input type="text" id="campo-endereco" required placeholder="Rua, Número, Bairro, Cidade - UF" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-fibra-cyan focus:bg-white outline-none transition-all font-medium text-slate-800 text-sm">
+                </div>
+              </div>
+
+              <!-- BOTÃO DE CADASTRO -->
+              <button type="submit" class="w-full py-4 bg-gradient-to-r from-fibra-blue to-fibra-cyan text-white font-black text-base uppercase tracking-wider rounded-xl shadow-xl hover:from-fibra-cyan hover:to-fibra-blue hover:shadow-2xl active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 mt-4">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-fibra-yellow"></i> Confirmar Credenciamento
+              </button>
+            </form>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-200/60 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i> Seus dados estão seguros com a FibraSol
+          </div>
+          </div>
+        </div>
+
+    </div>
+
+    <!-- SEÇÃO 2: MENSAGEM DE BOAS-VINDAS IMPACTANTE (PÓS CADASTRO) -->
+    <div id="section-sucesso" class="hidden space-y-6 max-w-2xl mx-auto text-center py-8">
+      <div class="glass-card rounded-3xl p-8 shadow-2xl border-2 border-fibra-yellow relative overflow-hidden">
+        
+        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+          <i data-lucide="party-popper" class="w-10 h-10"></i>
+        </div>
+
+        <h2 class="text-3xl font-black text-fibra-blue uppercase">SEJA BEM-VINDO(A)!</h2>
+        <p class="text-lg font-bold text-fibra-cyan mt-1" id="nome-sucesso">Participante VIP</p>
+
+        <div class="my-6 p-6 bg-gradient-to-br from-fibra-blue to-fibra-cyan text-white rounded-2xl shadow-lg border border-white/20 space-y-3">
+          <div class="inline-block px-3 py-1 bg-fibra-yellow text-fibra-blue font-extrabold text-xs uppercase tracking-widest rounded-full">
+            Credencial Digital Ativada
+          </div>
+          <p class="text-sm font-medium leading-relaxed">
+            Seu cadastro foi realizado com sucesso em nosso estande praiano! Agora você faz parte da nossa rede de conexões exclusivas no evento.
+          </p>
+          <div class="pt-2 border-t border-white/10 text-xs font-bold text-fibra-yellow">
+            ☀️ A FIBRA NO DNA NORDESTINO • ORGULHO DE SER FIBRASOL!
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <button onclick="novoCadastro()" class="px-6 py-3 bg-fibra-yellow text-fibra-blue font-extrabold rounded-xl shadow-md hover:bg-yellow-300 transition-all flex items-center justify-center gap-2 text-sm">
+            <i data-lucide="user-plus" class="w-4 h-4"></i> Realizar Outro Cadastro
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================================================
+     FIBRASOL — CARTÃO PREMIUM DO QR CODE
+     ================================================ -->
+
+<div id="section-totem"
+     class="hidden space-y-6 max-w-xl mx-auto py-5">
+
+    <div class="fibrasol-qr-card relative overflow-hidden rounded-[32px] p-6 sm:p-8 text-center">
+
+        <!-- LUZES DECORATIVAS -->
+        <div class="fibrasol-qr-light fibrasol-qr-light-top"></div>
+        <div class="fibrasol-qr-light fibrasol-qr-light-bottom"></div>
+
+        <!-- CONTEÚDO DO CARTÃO -->
+        <div class="relative z-10">
+
+            
+          <!-- LOGO OFICIAL FIBRASOL -->
+          <div class="flex flex-col items-center mb-6">
+
+              <img
+                  src="https://www.fibrasol.com.br/wp-content/themes/fibrasol/assets/images/marca.svg"
+                  alt="FIBRASOL — Qualidade e agilidade na entrega"
+                  class="fibrasol-qr-logo-oficial"
+              >
+
+              <div class="fibrasol-qr-slogan">
+                  CONECTANDO PESSOAS
+              </div>
+
+              <div class="fibrasol-qr-divider"></div>
+
+          </div>
+
+
+            <!-- IDENTIFICAÇÃO -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full fibrasol-qr-badge mb-5">
+
+                <i data-lucide="shield-check"
+                   class="w-4 h-4"></i>
+
+                <span>CREDENCIAMENTO DIGITAL</span>
+
+            </div>
+
+            <!-- TÍTULO -->
+            <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight leading-tight">
+                Sua conexão começa aqui
+            </h2>
+
+            <!-- BOTÃO PARA IMPRIMIR O TOTEM -->
+            <button
+                type="button"
+                onclick="imprimirTotem()"
+                class="no-print inline-flex items-center justify-center gap-2 mt-5 px-6 py-3 rounded-xl bg-fibra-yellow text-fibra-blue font-extrabold text-sm shadow-lg hover:bg-yellow-300 transition-all"
+            >
+                <i data-lucide="printer" class="w-5 h-5"></i>
+                Imprimir Totem A4
+            </button>
+
+            <p class="text-sm sm:text-base text-blue-100/80 mt-3 max-w-sm mx-auto leading-relaxed">
+                Escaneie o QR Code com a câmera do celular para acessar o formulário de cadastro.
+            </p>
+
+            <!-- MASCOTE FIBRASOL -->
+            <div class="fibrasol-qr-mascote-area">
+
+                <div class="fibrasol-qr-mascote-glow"></div>
+
+                
+              <img
+                  src="https://raw.githubusercontent.com/a-g-a-p-i-t-o/storage/main/fibrasol_mascotte.jpg"
+                  alt=""
+                  class="fibrasol-qr-mascote"
+                  loading="lazy"
+              >
+
+            </div>
+
+            <!-- QR CODE: MANTER ESTE ID -->
+            <div class="fibrasol-qr-frame">
+
+                <div class="fibrasol-qr-frame-top">
+                    <span>ACESSE PELO CELULAR</span>
+                </div>
+
+                <div class="fibrasol-qr-white-area">
+
+                    <!-- O JAVASCRIPT EXISTENTE GERA O QR AQUI -->
+                    <div id="qrcode-container"></div>
+
+                </div>
+
+                <div class="fibrasol-qr-scan-label">
+
+                    <i data-lucide="scan-line"
+                       class="w-4 h-4"></i>
+
+                    <span>APONTE A CÂMERA PARA ESCANEAR</span>
+
+                </div>
+
+            </div>
+
+            <!-- INSTRUÇÃO -->
+            <div class="fibrasol-qr-instruction">
+
+                <div class="fibrasol-qr-instruction-icon">
+                    <i data-lucide="smartphone"
+                       class="w-5 h-5"></i>
+                </div>
+
+                <div class="text-left">
+                    <p class="text-sm font-extrabold text-white">
+                        É rápido e fácil!
+                    </p>
+
+                    <p class="text-xs text-blue-100/75 mt-1 leading-relaxed">
+                        Abra a câmera do celular, aponte para o código e toque no link exibido para iniciar seu cadastro.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- RODAPÉ -->
+            <div class="fibrasol-qr-footer">
+                <span>☀️ A FIBRA NO DNA NORDESTINO</span>
+                <span class="fibrasol-qr-footer-dot">•</span>
+                <span>ORGULHO DE SER FIBRASOL!</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- SEÇÃO 4: PAINEL ADMINISTRATIVO (CADASTROS E EXPORTAÇÃO) -->
+    <div id="section-admin" class="hidden space-y-6">
+      
+      <!-- CABEÇALHO DO PAINEL -->
+      <div class="glass-card rounded-3xl p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-white/50">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-black rounded-full uppercase">Área Restrita</span>
+            <h2 class="text-2xl font-black text-fibra-blue">Painel de Cadastros do Evento</h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Gerencie os dados coletados e exporte para sua planilha de preferência</p>
+        </div>
+
+        <!-- AÇÕES DO PAINEL -->
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <button onclick="exportarExcel()" class="flex-1 md:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
+            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> Exportar para Excel (.csv)
+          </button>
+          
+          <button onclick="excluirSelecionados()" id="btn-excluir-sel" disabled class="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-md text-xs sm:text-sm flex items-center justify-center gap-2 transition-all opacity-50 cursor-not-allowed">
+            <i data-lucide="trash-2" class="w-4 h-4"></i> Apagar Selecionados
+          </button>
+
+          <button onclick="fecharAdmin()" class="px-3 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition-all">
+            <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+          </button>
+        </div>
+      </div>
+
+      <!-- TABELA DE DADOS -->
+      <div class="glass-card rounded-3xl shadow-2xl overflow-hidden border border-white/50">
+        <div class="p-4 bg-slate-100/80 border-b border-slate-200 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div class="relative w-full sm:w-80">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="filtro-busca" oninput="filtrarTabela()" placeholder="Buscar por nome, empresa, telefone ou endereço..." class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-fibra-cyan">
+          </div>
+          <span class="text-xs font-bold text-slate-500" id="contador-registros">0 Registros encontrados</span>
+        </div>
+
+        <div class="overflow-x-auto max-h-[500px]">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-fibra-blue text-white text-[11px] font-black uppercase tracking-wider sticky top-0 z-10">
+                <th class="p-4 w-10 text-center">
+                  <input type="checkbox" id="check-all" onchange="selecionarTodos(this)" class="rounded border-slate-300 text-fibra-yellow focus:ring-fibra-yellow cursor-pointer">
+                </th>
+                <th class="p-4">#</th>
+                <th class="p-4">Nome Completo</th>
+                <th class="p-4">Razão Social</th>
+                <th class="p-4">Telefone / Whats</th>
+                <th class="p-4">Endereço</th>
+                <th class="p-4">Data / Hora</th>
+                <th class="p-4 text-center">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-corpo" class="divide-y divide-slate-200/80 text-xs font-semibold text-slate-700 bg-white/60">
+              <!-- Linhas inseridas via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL DE AUTENTICAÇÃO ADMINISTRATIVA -->
+  <div id="modal-auth" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="glass-card max-w-sm w-full p-6 rounded-3xl shadow-2xl border-2 border-fibra-yellow text-center space-y-4">
+      <div class="w-12 h-12 bg-fibra-blue text-fibra-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
+        <i data-lucide="lock" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="text-lg font-black text-fibra-blue">Acesso Restrito Admin</h3>
+        <p class="text-xs text-slate-500 mt-1">Informe a senha para gerenciar os cadastros</p>
+      </div>
+      <input type="password" id="senha-admin" placeholder="Digite a senha..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-sm font-bold focus:ring-2 focus:ring-fibra-cyan outline-none">
+      <div class="flex gap-2">
+        <button onclick="fecharModalAuth()" class="flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs">Cancelar</button>
+        <button onclick="validarSenhaAdmin()" class="flex-1 py-2.5 bg-fibra-blue hover:bg-fibra-cyan text-white font-bold rounded-xl text-xs shadow-md">Entrar</button>
+      </div>
+      <p class="text-[10px] text-slate-400">Dica de demonstração: <span class="font-bold text-slate-600">fibrasol2026</span></p>
+    </div>
+  </div>
+
+  <!-- RODAPÉ DA EMPRESA -->
+  <footer class="bg-fibra-blue text-white/70 py-4 border-t border-white/10 text-center text-xs font-semibold mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span>FibraSol © 2026 - Garantia na qualidade e na agilidade da entrega</span>
+      <span class="text-fibra-yellow">A Fibra no DNA Nordestino ☀️</span>
+    </div>
+  </footer>
+
+  <!-- SCRIPT COMPLETO DE FUNCIONALIDADES -->
+    <script src="script.js"></script>
+
+</body>
+</html>

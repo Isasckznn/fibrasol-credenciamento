@@ -1,0 +1,1891 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap');
+
+/* ==========================================================
+   FIBRASOL — BASE
+   ========================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, .5);
+}
+
+.beach-card-bg {
+    background: linear-gradient(
+        180deg,
+        #70c3ff 0%,
+        #0088d1 50%,
+        #f4cb85 100%
+    );
+}
+
+.neon-text-glow {
+    text-shadow:
+        0 0 15px rgba(255, 200, 0, .6),
+        0 0 30px rgba(0, 168, 255, .4);
+}
+
+
+/* ==========================================================
+   CABEÇALHO — FEIXES DE LUZ E VENTO
+   ========================================================== */
+
+header .header-light-beam {
+    position: absolute;
+    z-index: 1;
+    top: -35%;
+    bottom: -35%;
+    left: -48%;
+    width: clamp(90px, 15vw, 190px);
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, .04) 25%,
+        rgba(255, 238, 174, .28) 47%,
+        rgba(255, 255, 255, .58) 50%,
+        rgba(139, 221, 255, .2) 62%,
+        transparent 100%
+    );
+    filter: blur(2px);
+    transform: skewX(-22deg);
+    animation: headerBeamSweep 8s ease-in-out infinite;
+}
+
+header .header-light-beam-two {
+    width: clamp(55px, 8vw, 105px);
+    animation-delay: -3.2s;
+    animation-duration: 10s;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, .22),
+        rgba(255, 255, 255, .4),
+        transparent
+    );
+}
+
+header .header-light-beam-three {
+    width: clamp(35px, 5vw, 65px);
+    animation-delay: -5.8s;
+    animation-duration: 12s;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 218, 94, .25),
+        rgba(255, 255, 255, .34),
+        transparent
+    );
+}
+
+header .header-wind {
+    position: absolute;
+    z-index: 2;
+    height: 2px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, .9),
+        rgba(164, 226, 255, .82),
+        transparent
+    );
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, .38));
+    animation: headerWindFlow 5.5s ease-in-out infinite;
+}
+
+header .header-wind-one {
+    top: 30%;
+    left: 4%;
+    width: clamp(90px, 13vw, 180px);
+}
+
+header .header-wind-two {
+    top: 56%;
+    left: 24%;
+    width: clamp(65px, 9vw, 125px);
+    animation-delay: -2.2s;
+    animation-duration: 6.5s;
+}
+
+header .header-wind-three {
+    top: 23%;
+    right: 28%;
+    width: clamp(70px, 10vw, 140px);
+    animation-delay: -3.7s;
+    animation-duration: 7s;
+}
+
+@keyframes headerBeamSweep {
+    0% { left: -48%; opacity: 0; }
+    12% { opacity: .95; }
+    42% { opacity: .55; }
+    70% { opacity: .2; }
+    100% { left: 115%; opacity: 0; }
+}
+
+@keyframes headerWindFlow {
+    0% {
+        transform: translateX(-25px) scaleX(.55);
+        opacity: 0;
+    }
+    25% { opacity: .85; }
+    75% { opacity: .65; }
+    100% {
+        transform: translateX(85px) scaleX(1.2);
+        opacity: 0;
+    }
+}
+
+
+/* ==========================================================
+   CENÁRIO PRAIANO FIBRASOL
+   ========================================================== */
+
+#section-cadastro {
+    position: relative;
+    isolation: isolate;
+    padding: clamp(22px, 3vw, 38px);
+    margin: -1rem;
+    border-radius: 30px;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #07528c 0%,
+            #087fba 29%,
+            #21b8ce 53%,
+            #83d7d0 67%,
+            #f5d89e 86%,
+            #eac17e 100%
+        );
+
+    box-shadow: inset 0 0 90px rgba(0, 39, 94, .28);
+}
+
+/* Mantém os elementos do cadastro acima do cenário */
+#section-cadastro > *:not(.beach-atmosphere) {
+    position: relative;
+    z-index: 3;
+}
+
+/* Camada decorativa que não bloqueia cliques */
+#section-cadastro .beach-atmosphere {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Luz ambiente */
+#section-cadastro .beach-atmosphere::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+        linear-gradient(
+            115deg,
+            rgba(255, 255, 255, .08),
+            transparent 38%,
+            rgba(0, 54, 110, .12)
+        );
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   FOLHAS TROPICAIS — CANTOS SUPERIORES
+   Desenhadas em CSS, sem imagem de fundo
+   ========================================================== */
+
+#section-cadastro .beach-atmosphere::before {
+    content: "";
+    position: absolute;
+    z-index: 4;
+    top: -12px;
+    left: -18px;
+    width: clamp(180px, 27vw, 340px);
+    height: clamp(155px, 22vw, 270px);
+    pointer-events: none;
+    transform-origin: top left;
+    transform: rotate(-3deg);
+
+    background:
+        repeating-conic-gradient(
+            from 218deg at 0% 0%,
+            #14552f 0deg 3deg,
+            #287941 3deg 5deg,
+            #5ca951 5deg 6deg,
+            #1d6939 6deg 8deg,
+            transparent 8deg 12deg
+        );
+
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        87% 13%,
+        76% 23%,
+        64% 34%,
+        53% 47%,
+        43% 60%,
+        32% 76%,
+        18% 100%,
+        12% 77%,
+        8% 52%,
+        4% 28%
+    );
+
+    filter: drop-shadow(0 5px 5px rgba(0, 35, 20, .2));
+    animation: fibraPalmLeft 7s ease-in-out infinite;
+}
+
+/* Folhagem superior direita */
+#section-cadastro .beach-atmosphere .beach-sun::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    right: -145px;
+    width: clamp(180px, 25vw, 310px);
+    height: clamp(150px, 21vw, 250px);
+
+    background:
+        repeating-conic-gradient(
+            from 145deg at 100% 0%,
+            #14552f 0deg 3deg,
+            #287941 3deg 5deg,
+            #5ca951 5deg 6deg,
+            #1d6939 6deg 8deg,
+            transparent 8deg 12deg
+        );
+
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        96% 28%,
+        92% 52%,
+        88% 77%,
+        82% 100%,
+        68% 76%,
+        57% 60%,
+        47% 47%,
+        36% 34%,
+        24% 23%,
+        13% 13%
+    );
+
+    transform-origin: top right;
+    animation: fibraPalmRight 8s ease-in-out infinite;
+}
+
+
+/* ==========================================================
+   SOL
+   ========================================================== */
+
+#section-cadastro .beach-sun {
+    position: absolute;
+    z-index: 1;
+    top: 7%;
+    right: 9%;
+    width: clamp(95px, 13vw, 165px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle at 35% 35%,
+        #fffde0 0%,
+        #ffe66d 42%,
+        #ffbf00 76%
+    );
+
+    box-shadow:
+        0 0 35px 12px rgba(255, 216, 62, .32),
+        0 0 100px 35px rgba(255, 216, 62, .18);
+
+    animation: fibraSunPulse 5s ease-in-out infinite;
+}
+
+
+/* ==========================================================
+   NUVENS
+   ========================================================== */
+
+#section-cadastro .beach-cloud {
+    position: absolute;
+    z-index: 1;
+    width: 145px;
+    height: 40px;
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, .78);
+
+    box-shadow:
+        24px -19px 0 4px rgba(255, 255, 255, .78),
+        59px -8px 0 rgba(255, 255, 255, .78),
+        83px 3px 0 -4px rgba(255, 255, 255, .78);
+
+    animation: fibraCloudDrift 32s linear infinite;
+}
+
+#section-cadastro .cloud-one {
+    top: 12%;
+    left: -250px;
+}
+
+#section-cadastro .cloud-two {
+    top: 28%;
+    left: -320px;
+    opacity: .62;
+    animation-duration: 44s;
+    animation-delay: -13s;
+}
+
+
+/* ==========================================================
+   VENTO
+   ========================================================== */
+
+#section-cadastro .beach-wind {
+    position: absolute;
+    z-index: 1;
+    height: 2px;
+    width: clamp(70px, 10vw, 150px);
+    border-radius: 99px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, .95),
+        transparent
+    );
+
+    animation: fibraWind 7s ease-in-out infinite;
+}
+
+#section-cadastro .wind-one {
+    top: 24%;
+    left: 7%;
+}
+
+#section-cadastro .wind-two {
+    top: 34%;
+    left: 14%;
+    width: 95px;
+    animation-delay: -2s;
+}
+
+#section-cadastro .wind-three {
+    top: 18%;
+    right: 25%;
+    width: 115px;
+    animation-delay: -4s;
+}
+
+
+/* ==========================================================
+   MAR E ONDAS
+   ========================================================== */
+
+#section-cadastro .beach-sea {
+    position: absolute;
+    z-index: 1;
+    left: -8%;
+    right: -8%;
+    bottom: 12%;
+    height: 27%;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(86, 235, 226, .72),
+            rgba(0, 166, 205, .83) 38%,
+            rgba(0, 93, 161, .85)
+        );
+
+    border-radius: 48% 52% 0 0 / 18% 22% 0 0;
+    transform: rotate(-2deg);
+}
+
+#section-cadastro .beach-wave {
+    position: absolute;
+    z-index: 2;
+    left: -12%;
+    width: 124%;
+    height: 75px;
+    bottom: 13%;
+
+    border-top: 4px solid rgba(255, 255, 255, .68);
+    border-radius: 50%;
+    transform: rotate(-2deg);
+
+    animation: fibraWave 8s ease-in-out infinite;
+}
+
+#section-cadastro .beach-wave.wave-two {
+    bottom: 17%;
+    left: -6%;
+    opacity: .55;
+    animation-delay: -3s;
+    animation-duration: 11s;
+}
+
+
+/* ==========================================================
+   AREIA
+   ========================================================== */
+
+#section-cadastro .beach-sand {
+    position: absolute;
+    z-index: 2;
+    left: -5%;
+    right: -5%;
+    bottom: -4%;
+    height: 20%;
+
+    background:
+        radial-gradient(
+            ellipse at 25% 35%,
+            rgba(255, 250, 220, .65),
+            transparent 42%
+        ),
+        linear-gradient(
+            180deg,
+            #ffe8b2 0%,
+            #f4d18e 55%,
+            #e8bd76 100%
+        );
+
+    border-radius: 50% 50% 0 0 / 18% 18% 0 0;
+    box-shadow: 0 -12px 35px rgba(255, 239, 196, .2);
+}
+
+
+
+/* =====================================================
+   MASCOTE FIBRASOL — AO LADO DO CADASTRO, NA AREIA
+   ===================================================== */
+
+#section-cadastro {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+#section-cadastro .beach-mascot-backdrop {
+    position: absolute;
+    z-index: 3;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    right: 20%;
+    bottom: 2%;
+
+    width: clamp(220px, 29vw, 390px);
+    height: 78%;
+
+    pointer-events: none;
+    opacity: 1;
+}
+
+#section-cadastro .beach-mascot-backdrop img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center bottom;
+
+    filter:
+        drop-shadow(0 12px 12px rgba(0, 35, 75, 0.18))
+        drop-shadow(0 2px 3px rgba(0, 35, 75, 0.12));
+
+    animation: mascotePraiaFlutuar 4s ease-in-out infinite;
+}
+
+@keyframes mascotePraiaFlutuar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* Mantém o formulário à frente dos elementos decorativos */
+#section-cadastro .beach-form-wrap {
+    position: relative;
+    z-index: 4;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    #section-cadastro .beach-mascot-backdrop {
+        right: 0;
+        width: 29%;
+        height: 65%;
+    }
+}
+
+/* Celular: evita que o mascote cubra o cadastro */
+@media (max-width: 640px) {
+    #section-cadastro .beach-mascot-backdrop {
+        right: -12px;
+        bottom: 0;
+        width: 42%;
+        height: 40%;
+        opacity: 0.85;
+    }
+
+    #section-cadastro .beach-mascot-backdrop img {
+        animation: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #section-cadastro .beach-mascot-backdrop img {
+        animation: none;
+    }
+}
+
+
+
+/* ==========================================================
+   TÍTULO DO CADASTRO
+   ========================================================== */
+
+#section-cadastro > .text-center {
+    max-width: 850px;
+    margin: 0 auto 14px;
+    padding: 0;
+
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    backdrop-filter: none;
+    box-shadow: none;
+}
+
+#section-cadastro > .text-center h1 {
+    margin: 0;
+
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(1.55rem, 3.5vw, 2.85rem);
+    font-weight: 900;
+    line-height: 1.12;
+    letter-spacing: -.035em;
+    text-transform: uppercase;
+
+    color: #fff8c9;
+
+    background-image: linear-gradient(
+        100deg,
+        #fff8c9 0%,
+        #ffd52f 28%,
+        #fff 52%,
+        #ffe05a 76%,
+        #fff8c9 100%
+    );
+
+    background-size: 220% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    filter: drop-shadow(0 0 12px rgba(255, 205, 35, .26));
+
+    animation: fibraTitleShine 7s ease-in-out infinite;
+}
+
+@keyframes fibraTitleShine {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: drop-shadow(0 0 8px rgba(255, 205, 35, .2));
+    }
+
+    50% {
+        background-position: 100% 50%;
+        filter: drop-shadow(0 0 15px rgba(255, 225, 90, .42));
+    }
+}
+
+
+/* ==========================================================
+   CARD DE CADASTRO — COMPACTO
+   ========================================================== */
+
+#section-cadastro .beach-form-wrap {
+    position: relative;
+    z-index: 4;
+
+    width: min(100%, 490px);
+    max-width: 490px;
+    min-width: 0;
+
+    margin: 14px auto 0 2%;
+}
+
+#section-cadastro .beach-form-wrap > .glass-card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 22px;
+
+    background: rgba(255, 255, 255, .96);
+    border: 1px solid rgba(255, 255, 255, .88);
+
+    box-shadow:
+        0 24px 55px rgba(0, 35, 84, .28),
+        0 0 0 4px rgba(255, 255, 255, .12);
+}
+
+#section-cadastro .beach-form-wrap > .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 6px;
+
+    background: linear-gradient(
+        90deg,
+        #ffc800,
+        #00a8ff,
+        #002b66,
+        #ffc800
+    );
+
+    background-size: 220% 100%;
+    animation: fibraColorFlow 6s linear infinite;
+
+    border-radius: 24px 24px 0 0;
+}
+
+
+/* ==========================================================
+   ANIMAÇÕES DO CENÁRIO
+   ========================================================== */
+
+@keyframes fibraSunPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+        filter: brightness(1.12);
+    }
+}
+
+@keyframes fibraCloudDrift {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: calc(100vw + 430px) 12px;
+    }
+}
+
+@keyframes fibraWind {
+    0%, 100% {
+        transform: translateX(0) scaleX(.7);
+        opacity: .15;
+    }
+
+    50% {
+        transform: translateX(45px) scaleX(1.15);
+        opacity: .9;
+    }
+}
+
+@keyframes fibraWave {
+    0%, 100% {
+        transform: translateX(-2%) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateX(2%) rotate(1deg);
+    }
+}
+
+@keyframes fibraMascotSway {
+    0%, 100% {
+        transform: translateY(0) rotate(-1deg);
+    }
+
+    50% {
+        transform: translateY(-7px) rotate(1deg);
+    }
+}
+
+@keyframes fibraColorFlow {
+    from { background-position: 0% 50%; }
+    to { background-position: 220% 50%; }
+}
+
+@keyframes fibraPalmLeft {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(1deg); }
+}
+
+@keyframes fibraPalmRight {
+    0%, 100% { transform: rotate(2deg); }
+    50% { transform: rotate(-2deg); }
+}
+
+
+/* ==========================================================
+   LETREIRO INFINITO CONTÍNUO
+   ========================================================== */
+
+.fibrasol-marquee {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.fibrasol-marquee-trilho {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width: max-content;
+    min-width: max-content;
+    will-change: transform;
+    animation: fibrasolMarqueeLoop 32s linear infinite;
+}
+
+.fibrasol-marquee-grupo {
+    display: flex;
+    flex: 0 0 auto;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 28px;
+    padding-right: 28px;
+    white-space: nowrap;
+}
+
+.fibrasol-marquee-grupo > span {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.fibrasol-marquee-separador {
+    opacity: .8;
+}
+
+@keyframes fibrasolMarqueeLoop {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+.fibrasol-marquee:hover .fibrasol-marquee-trilho {
+    animation-play-state: paused;
+}
+
+
+/* ==========================================================
+   CARTÃO PREMIUM DO QR CODE
+   ========================================================== */
+
+.fibrasol-qr-card {
+    isolation: isolate;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(22, 110, 205, .30),
+            transparent 48%
+        ),
+        linear-gradient(
+            145deg,
+            #06152f 0%,
+            #082d60 48%,
+            #03152f 100%
+        );
+
+    border: 1px solid rgba(255, 214, 55, .65);
+
+    box-shadow:
+        0 25px 70px rgba(0, 20, 55, .30),
+        0 0 28px rgba(37, 129, 255, .14),
+        inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+
+.fibrasol-qr-light {
+    position: absolute;
+    z-index: 0;
+    width: 210px;
+    height: 210px;
+    border-radius: 50%;
+    filter: blur(65px);
+    pointer-events: none;
+}
+
+.fibrasol-qr-light-top {
+    top: -115px;
+    right: -65px;
+    background: rgba(255, 211, 50, .25);
+}
+
+.fibrasol-qr-light-bottom {
+    bottom: -130px;
+    left: -75px;
+    background: rgba(0, 153, 255, .28);
+}
+
+.fibrasol-qr-logo {
+    color: #fff;
+    font-size: clamp(2.4rem, 8vw, 3.4rem);
+    font-weight: 950;
+    font-style: italic;
+    letter-spacing: .07em;
+    line-height: 1;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, .25);
+}
+
+.fibrasol-qr-logo span {
+    color: #ffd633;
+}
+
+.fibrasol-qr-slogan {
+    margin-top: 9px;
+    color: #ffe58a;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .19em;
+    text-align: center;
+}
+
+.fibrasol-qr-divider {
+    width: 72px;
+    height: 3px;
+    margin-top: 18px;
+    border-radius: 999px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #ffd633,
+        #fff1a6,
+        #ffd633,
+        transparent
+    );
+
+    box-shadow: 0 0 14px rgba(255, 214, 51, .45);
+}
+
+.fibrasol-qr-badge {
+    color: #ffe27a;
+    background: rgba(255, 214, 51, .09);
+    border: 1px solid rgba(255, 214, 51, .35);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .12em;
+}
+
+.fibrasol-qr-mascote-area {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 112px;
+    margin: 8px auto 18px;
+}
+
+.fibrasol-qr-mascote-glow {
+    position: absolute;
+    width: 115px;
+    height: 85px;
+    border-radius: 50%;
+    background: rgba(255, 207, 42, .18);
+    filter: blur(30px);
+}
+
+.fibrasol-qr-mascote {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: auto;
+    height: 112px;
+    max-width: 150px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .35));
+    transition: transform .3s ease;
+}
+
+.fibrasol-qr-mascote:hover {
+    transform: translateY(-3px) scale(1.04);
+}
+
+
+/* QR CODE — MOLDURA */
+
+.fibrasol-qr-frame {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 13px;
+    border-radius: 25px;
+
+    background: linear-gradient(
+        145deg,
+        #ffe98b,
+        #ffd633,
+        #dba91a
+    );
+
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, .35),
+        0 0 26px rgba(255, 214, 51, .20),
+        0 16px 35px rgba(0, 0, 0, .25);
+}
+
+.fibrasol-qr-frame-top {
+    padding: 1px 0 11px;
+    color: #09295a;
+    font-size: 10px;
+    font-weight: 950;
+    letter-spacing: .15em;
+}
+
+.fibrasol-qr-white-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 244px;
+    padding: 10px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid rgba(3, 30, 68, .10);
+}
+
+/* Preserva o tamanho do QR gerado pelo JavaScript */
+#qrcode-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 220px;
+    height: 220px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    background: #fff;
+}
+
+#qrcode-container img,
+#qrcode-container canvas {
+    display: block;
+    width: 220px;
+    height: 220px;
+    max-width: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.fibrasol-qr-scan-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    color: #09295a;
+    font-size: 9px;
+    font-weight: 950;
+    letter-spacing: .08em;
+}
+
+.fibrasol-qr-instruction {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-top: 25px;
+    padding: 16px;
+    text-align: left;
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .06);
+    backdrop-filter: blur(12px);
+}
+
+.fibrasol-qr-instruction-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    color: #09295a;
+    background: #ffd633;
+    border-radius: 13px;
+    box-shadow: 0 4px 16px rgba(255, 214, 51, .18);
+}
+
+.fibrasol-qr-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 24px;
+    padding-top: 17px;
+    border-top: 1px solid rgba(255, 255, 255, .13);
+    color: #ffe27a;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: .06em;
+}
+
+.fibrasol-qr-footer-dot {
+    color: #fff;
+    opacity: .7;
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE — TABLETS
+   ========================================================== */
+
+@media (max-width: 800px) {
+    #section-cadastro {
+        padding: 20px;
+    }
+
+    #section-cadastro .beach-form-wrap {
+        width: min(100%, 490px);
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    #section-cadastro .beach-mascot-backdrop {
+        right: -4%;
+        width: clamp(190px, 32vw, 260px);
+        opacity: .52;
+    }
+
+    #section-cadastro .beach-sun {
+        right: 7%;
+    }
+
+    #section-cadastro .beach-atmosphere::before {
+        width: 205px;
+        height: 175px;
+    }
+
+    #section-cadastro .beach-atmosphere .beach-sun::before {
+        right: -105px;
+        width: 205px;
+        height: 175px;
+    }
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE — CELULARES
+   ========================================================== */
+
+@media (max-width: 640px) {
+    #section-cadastro {
+        margin: -.5rem;
+        padding: 16px;
+        border-radius: 22px;
+    }
+
+    #section-cadastro > .text-center {
+        margin-bottom: 14px;
+    }
+
+    #section-cadastro > .text-center h1 {
+        font-size: clamp(1.4rem, 6vw, 2rem);
+    }
+
+    #section-cadastro .beach-form-wrap {
+        width: 100%;
+        max-width: 100%;
+        margin: 12px auto 0;
+    }
+
+    #section-cadastro .beach-form-wrap > .glass-card {
+        padding: 18px;
+    }
+
+    /*
+       No celular, o mascote fica mais discreto
+       atrás e ao lado do formulário para não
+       comprometer a leitura dos campos.
+    */
+    #section-cadastro .beach-mascot-backdrop {
+        width: 190px;
+        max-width: 48%;
+        max-height: 42%;
+        right: -18px;
+        bottom: 2%;
+        opacity: .24;
+    }
+
+    #section-cadastro .beach-sun {
+        width: 90px;
+        top: 5%;
+        right: 7%;
+    }
+
+    #section-cadastro .beach-atmosphere::before {
+        width: 150px;
+        height: 135px;
+    }
+
+    #section-cadastro .beach-atmosphere .beach-sun::before {
+        right: -80px;
+        width: 150px;
+        height: 135px;
+    }
+
+    .fibrasol-marquee-grupo {
+        gap: 20px;
+        padding-right: 20px;
+    }
+}
+
+
+/* ==========================================================
+   TELAS MUITO PEQUENAS
+   ========================================================== */
+
+@media (max-width: 380px) {
+    .fibrasol-qr-card {
+        padding: 20px 14px;
+        border-radius: 25px;
+    }
+
+    .fibrasol-qr-frame {
+        padding: 10px;
+    }
+
+    .fibrasol-qr-white-area {
+        min-height: 230px;
+        padding: 5px;
+    }
+
+    #qrcode-container {
+        width: 210px;
+        height: 210px;
+    }
+
+    #qrcode-container img,
+    #qrcode-container canvas {
+        width: 210px;
+        height: 210px;
+    }
+
+    .fibrasol-qr-footer {
+        font-size: 8px;
+    }
+}
+
+
+/* ==========================================================
+   ACESSIBILIDADE — MOVIMENTO REDUZIDO
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    header .header-light-beam,
+    header .header-wind,
+    #section-cadastro .beach-sun,
+    #section-cadastro .beach-cloud,
+    #section-cadastro .beach-wind,
+    #section-cadastro .beach-wave,
+    #section-cadastro .beach-mascot-backdrop,
+    #section-cadastro .beach-atmosphere::before,
+    #section-cadastro .beach-atmosphere .beach-sun::before,
+    #section-cadastro .beach-form-wrap > .glass-card::before,
+    #section-cadastro > .text-center h1,
+    .fibrasol-marquee-trilho {
+        animation: none !important;
+    }
+}
+
+
+/* =====================================================
+   CABEÇALHO FIBRASOL — MARCA RESPONSIVA
+   Mascote, logo e slogan lado a lado
+   ===================================================== */
+
+.fibrasol-header-brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    min-width: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.fibrasol-header-mascot {
+    display: block;
+    width: 66px;
+    height: 72px;
+    flex: 0 0 auto;
+    object-fit: contain;
+    object-position: center bottom;
+    filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.2));
+}
+
+.fibrasol-header-logo {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.fibrasol-header-name {
+    font-family: sans-serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(25px, 3vw, 38px);
+    line-height: 1;
+    letter-spacing: -1.5px;
+    color: #FFFFFF;
+    white-space: nowrap;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.fibrasol-header-name span {
+    color: #FFC800;
+}
+
+.fibrasol-header-slogan {
+    max-width: 145px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    color: #FFC800;
+    font-family: sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: 1px;
+}
+
+/* Celulares */
+@media (max-width: 640px) {
+    .fibrasol-header-brand {
+        width: 100%;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .fibrasol-header-mascot {
+        width: 48px;
+        height: 54px;
+    }
+
+    .fibrasol-header-name {
+        font-size: clamp(24px, 7vw, 31px);
+        letter-spacing: -1px;
+    }
+
+    .fibrasol-header-slogan {
+        max-width: 105px;
+        padding-left: 8px;
+        font-size: 7px;
+        letter-spacing: 0.5px;
+        line-height: 1.4;
+    }
+}
+
+/* Celulares estreitos */
+@media (max-width: 360px) {
+    .fibrasol-header-brand {
+        gap: 5px;
+    }
+
+    .fibrasol-header-mascot {
+        width: 39px;
+        height: 46px;
+    }
+
+    .fibrasol-header-name {
+        font-size: 23px;
+    }
+
+    .fibrasol-header-slogan {
+        max-width: 88px;
+        padding-left: 6px;
+        font-size: 6px;
+    }
+}
+
+/* ==========================================
+   CABEÇALHO FIBRASOL — MARCA OFICIAL
+   ========================================== */
+
+.fibrasol-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.fibrasol-header-mascot {
+    display: block;
+    width: 58px;
+    height: 66px;
+    flex: 0 0 auto;
+    object-fit: contain;
+    object-position: center bottom;
+}
+
+/* Logo original em SVG */
+.fibrasol-header-logo-oficial {
+    display: block;
+    width: 165px;
+    max-width: 30vw;
+    height: auto;
+    flex: 0 1 auto;
+    object-fit: contain;
+}
+
+/* Slogan ao lado da marca */
+.fibrasol-header-slogan {
+    max-width: 145px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+    color: #FFC800;
+    font-family: sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: 0.7px;
+}
+
+/* Impede que o mascote antigo apareça na praia */
+.beach-mascot-backdrop {
+    display: none !important;
+}
+
+/* Ajustes para celular */
+@media (max-width: 640px) {
+    .fibrasol-header-brand {
+        gap: 7px;
+        justify-content: center;
+    }
+
+    .fibrasol-header-mascot {
+        width: 43px;
+        height: 51px;
+    }
+
+    .fibrasol-header-logo-oficial {
+        width: 125px;
+        max-width: 37vw;
+    }
+
+    .fibrasol-header-slogan {
+        max-width: 100px;
+        padding-left: 7px;
+        font-size: 7px;
+        letter-spacing: 0.2px;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 360px) {
+    .fibrasol-header-mascot {
+        width: 35px;
+        height: 43px;
+    }
+
+    .fibrasol-header-logo-oficial {
+        width: 108px;
+    }
+
+    .fibrasol-header-slogan {
+        max-width: 83px;
+        font-size: 6px;
+    }
+}
+
+/* ==========================================
+   CORREÇÃO DO CARD DE CADASTRO
+   Mantém o formulário vertical e visível
+   ========================================== */
+
+#section-cadastro {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+#section-cadastro .beach-form-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#section-cadastro #form-cadastro {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#section-cadastro .beach-form-wrap input,
+#section-cadastro .beach-form-wrap select,
+#section-cadastro .beach-form-wrap textarea,
+#section-cadastro .beach-form-wrap button {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+    #section-cadastro {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    #section-cadastro .beach-form-wrap {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+/* ==========================================
+   MASCOTE FIBRASOL — DESTAQUE NO CABEÇALHO
+   ========================================== */
+
+.fibrasol-header-mascot {
+    width: 82px;
+    height: 90px;
+    flex: 0 0 auto;
+    object-fit: contain;
+    object-position: center bottom;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* Celulares */
+@media (max-width: 640px) {
+    .fibrasol-header-brand {
+        gap: 8px;
+    }
+
+    .fibrasol-header-mascot {
+        width: 70px;
+        height: 78px;
+    }
+
+    .fibrasol-header-logo-oficial {
+        width: 120px;
+        max-width: 34vw;
+    }
+
+    .fibrasol-header-slogan {
+        max-width: 100px;
+        font-size: 7px;
+    }
+}
+
+/* Celulares estreitos */
+@media (max-width: 360px) {
+    .fibrasol-header-mascot {
+        width: 60px;
+        height: 68px;
+    }
+
+    .fibrasol-header-logo-oficial {
+        width: 100px;
+    }
+
+    .fibrasol-header-slogan {
+        max-width: 80px;
+        font-size: 6px;
+    }
+}
+
+
+/* ==========================================================
+   FIBRASOL — CORREÇÕES FINAIS DO TOTEM E DO CADASTRO
+   ========================================================== */
+
+/* Remove o espaço vazio deixado pelo mascote retirado */
+#section-totem .fibrasol-qr-mascote-area {
+    display: none !important;
+}
+
+/* QR Code: centralizado, sem deslocamentos conflitantes */
+#section-totem .fibrasol-qr-frame {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto !important;
+    transform: none !important;
+}
+
+/* Mantém o código centralizado e legível */
+#section-totem .fibrasol-qr-white-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Aproxima as instruções do QR Code */
+#section-totem .fibrasol-qr-instruction {
+    margin-top: 16px !important;
+}
+
+/* Mantém o rodapé do Totem equilibrado */
+#section-totem .fibrasol-qr-footer {
+    margin-top: 20px;
+}
+
+/* ==========================================================
+   CARD DE CADASTRO — LARGURA CONTROLADA
+   ========================================================== */
+
+#section-cadastro .beach-form-wrap {
+    width: 100%;
+    max-width: 490px;
+    min-width: 0;
+    margin: 14px auto 0 2%;
+    box-sizing: border-box;
+}
+
+#section-cadastro .beach-form-wrap > .glass-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+#section-cadastro #form-cadastro {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+}
+
+#section-cadastro #form-cadastro input,
+#section-cadastro #form-cadastro button {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tablets */
+@media (max-width: 800px) {
+    #section-cadastro .beach-form-wrap {
+        width: 100%;
+        max-width: 490px;
+        margin: 14px auto 0;
+    }
+}
+
+/* Celulares */
+@media (max-width: 640px) {
+    #section-cadastro .beach-form-wrap {
+        width: 100%;
+        max-width: 490px;
+        margin: 12px auto 0;
+    }
+
+    #section-cadastro .beach-form-wrap > .glass-card {
+        padding: 18px;
+    }
+}
+
+/* LOGO OFICIAL NO CABEÇALHO DO TOTEM QR */
+
+#section-totem .fibrasol-qr-logo-oficial {
+    display: block;
+    width: 220px;
+    max-width: 85%;
+    height: 65px;
+    object-fit: contain;
+    object-position: center;
+    margin: 0 auto 8px;
+}
+
+/* ==========================================
+   TOTEM QR — LOGO E FRASE
+   ========================================== */
+
+#section-totem .fibrasol-qr-logo-oficial {
+    filter: brightness(0) invert(1);
+}
+
+#section-totem .fibrasol-qr-slogan {
+    color: #e0e016;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-align: center;
+    font-size: 12px;
+}
+
+
+/* LOGO OFICIAL FIBRASOL — CABEÇALHO PRINCIPAL EM BRANCO */
+
+.fibrasol-header-logo-oficial {
+    filter: brightness(0) invert(1) !important;
+}
+
+/* ==========================================================
+   FIBRASOL — IMPRESSÃO DO TOTEM QR CODE EM A4
+   ========================================================== */
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
+    }
+
+    html,
+    body {
+        width: 100% !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        font-family: Arial, sans-serif !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #section-totem,
+    #section-totem * {
+        visibility: visible !important;
+    }
+
+    #section-totem {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+
+    #section-totem .fibrasol-qr-card {
+        width: 100% !important;
+        max-width: 170mm !important;
+        margin: 0 auto !important;
+        padding: 8mm !important;
+        overflow: visible !important;
+        border: 1px solid #d9ad24 !important;
+        border-radius: 8mm !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        background: #082d60 !important;
+    }
+
+    #section-totem .fibrasol-qr-logo-oficial {
+        width: 60mm !important;
+        max-width: 100% !important;
+        height: 18mm !important;
+        filter: brightness(0) invert(1) !important;
+    }
+
+    #section-totem .fibrasol-qr-mascote-area {
+        display: none !important;
+    }
+
+    #section-totem .fibrasol-qr-frame {
+        width: 76mm !important;
+        max-width: 100% !important;
+        margin: 5mm auto !important;
+        padding: 4mm !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+    }
+
+    #section-totem .fibrasol-qr-white-area {
+        min-height: 0 !important;
+        padding: 3mm !important;
+        background: #ffffff !important;
+    }
+
+    #qrcode-container {
+        width: 60mm !important;
+        height: 60mm !important;
+        max-width: none !important;
+        margin: 0 auto !important;
+    }
+
+    #qrcode-container img,
+    #qrcode-container canvas {
+        display: block !important;
+        width: 60mm !important;
+        height: 60mm !important;
+        max-width: none !important;
+        image-rendering: pixelated !important;
+    }
+
+    #section-totem .fibrasol-qr-instruction {
+        margin-top: 5mm !important;
+        padding: 4mm !important;
+        break-inside: avoid !important;
+    }
+
+    #section-totem .fibrasol-qr-footer {
+        margin-top: 5mm !important;
+        padding-top: 4mm !important;
+        font-size: 8pt !important;
+    }
+
+    #section-totem .fibrasol-qr-light {
+        display: none !important;
+    }
+
+    #section-admin,
+    #modal-auth,
+    header,
+    footer,
+    nav,
+    button {
+        display: none !important;
+    }
+}
+
+
+/* ==========================================================
+   FIBRASOL — IMPRESSÃO DO TOTEM EM A4
+   ========================================================== */
+
+
+@media screen {
+    .no-print {
+        display: inline-flex;
+    }
+}
+
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
+    }
+
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+        background: #fff !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #section-totem,
+    #section-totem * {
+        visibility: visible !important;
+    }
+
+    #section-totem {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #section-totem .fibrasol-qr-card {
+        width: 100% !important;
+        max-width: 170mm !important;
+        margin: 0 auto !important;
+        padding: 8mm !important;
+        border-radius: 8mm !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        background: #002B66 !important;
+    }
+
+    #section-totem .fibrasol-qr-mascote-area,
+    #section-totem .fibrasol-qr-light,
+    #section-totem .no-print {
+        display: none !important;
+    }
+
+    #section-totem .fibrasol-qr-frame {
+        width: 76mm !important;
+        max-width: 100% !important;
+        margin: 5mm auto !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+    }
+
+    #qrcode-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        background: #fff !important;
+    }
+
+    #qrcode-container img,
+    #qrcode-container canvas {
+        display: block !important;
+        width: 60mm !important;
+        height: 60mm !important;
+        max-width: none !important;
+    }
+
+    #section-totem .fibrasol-qr-instruction,
+    #section-totem .fibrasol-qr-footer {
+        break-inside: avoid !important;
+    }
+
+    header,
+    footer,
+    #section-admin,
+    #section-cadastro,
+    #section-sucesso,
+    #modal-auth {
+        display: none !important;
+    }
+}
