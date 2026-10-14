@@ -1169,10 +1169,19 @@ function imprimirTotem() {
         const imagemImpressao =
             janelaImpressao.document.getElementById("qr-impressao");
 
-        imagemImpressao.onload = function () {
-            janelaImpressao.focus();
-            janelaImpressao.print();
-        };
+        let impressaoIniciada = false;
+
+            imagemImpressao.onload = function () {
+                if (impressaoIniciada) return;
+
+                impressaoIniciada = true;
+
+                janelaImpressao.focus();
+
+                window.setTimeout(function () {
+                    janelaImpressao.print();
+                }, 300);
+            };
 
         imagemImpressao.onerror = function () {
             alert("Não foi possível carregar o QR Code na página de impressão.");
