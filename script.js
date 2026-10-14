@@ -1034,18 +1034,16 @@ function imprimirTotem() {
 
     if (!janela) {
         window.__impressaoTotemEmAndamento = false;
-        alert("Permita a abertura de janelas pop-up para imprimir o Totem.");
+        alert("Permita pop-ups para imprimir o Totem FibraSol.");
         return;
     }
 
-    const areaTemporaria = document.createElement("div");
-
-    areaTemporaria.style.cssText =
+    const area = document.createElement("div");
+    area.style.cssText =
         "position:fixed;left:-10000px;top:0;width:800px;height:800px;";
+    document.body.appendChild(area);
 
-    document.body.appendChild(areaTemporaria);
-
-    new QRCode(areaTemporaria, {
+    new QRCode(area, {
         text: enderecoPagina,
         width: 800,
         height: 800,
@@ -1053,23 +1051,19 @@ function imprimirTotem() {
     });
 
     setTimeout(() => {
-        const canvas = areaTemporaria.querySelector("canvas");
-        const imagemOriginal = areaTemporaria.querySelector("img");
+        const canvas = area.querySelector("canvas");
+        const imagem = area.querySelector("img");
 
-        let imagemQR = "";
+        const qr = canvas
+            ? canvas.toDataURL("image/png")
+            : imagem?.src;
 
-        if (canvas) {
-            imagemQR = canvas.toDataURL("image/png");
-        } else if (imagemOriginal && imagemOriginal.src) {
-            imagemQR = imagemOriginal.src;
-        }
+        area.remove();
 
-        areaTemporaria.remove();
-
-        if (!imagemQR) {
+        if (!qr) {
             janela.close();
             window.__impressaoTotemEmAndamento = false;
-            alert("Não foi possível gerar o QR Code para impressão.");
+            alert("Não foi possível gerar o QR Code.");
             return;
         }
 
@@ -1078,13 +1072,12 @@ function imprimirTotem() {
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Totem QR Code - FibraSol</title>
+<title>Totem Oficial FibraSol</title>
 
 <style>
     @page {
         size: A4 portrait;
-        margin: 12mm;
+        margin: 10mm;
     }
 
     * {
@@ -1094,167 +1087,277 @@ function imprimirTotem() {
     html, body {
         margin: 0;
         padding: 0;
-        width: 100%;
-        font-family: Arial, sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         background: #ffffff;
-        color: #002B66;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     body {
+        color: #ffffff;
         text-align: center;
     }
 
-    .totem-impressao {
+    .folha {
+        width: 100%;
+        min-height: 265mm;
+        padding: 7mm;
+        background: #ffffff;
+    }
+
+    .cartaz {
+        position: relative;
         width: 100%;
         max-width: 180mm;
         margin: 0 auto;
-        padding: 8mm;
-        border: 1px solid #d9ad24;
-        border-radius: 5mm;
-        background: #002B66;
+        padding: 10mm 8mm 8mm;
+        overflow: hidden;
+        border: 1.2mm solid #d9ad24;
+        border-radius: 7mm;
+        background:
+            radial-gradient(
+                circle at 50% 22%,
+                #104b8c 0%,
+                #082d60 42%,
+                #03152f 100%
+            );
+    }
+
+    .faixa-superior {
+        width: 40mm;
+        height: 2mm;
+        margin: 0 auto 7mm;
+        border-radius: 99px;
+        background: linear-gradient(
+            90deg,
+            #b98913,
+            #fff0a3,
+            #ffd633,
+            #b98913
+        );
+    }
+
+    .marca {
+        margin: 0;
         color: #ffffff;
-        break-inside: avoid;
-        page-break-inside: avoid;
-    }
-
-    h1 {
-        margin: 0 0 3mm;
-        font-size: 27pt;
+        font-size: 35pt;
         font-weight: 900;
+        font-style: italic;
         letter-spacing: 2px;
+        line-height: 1;
     }
 
-    h1 span {
-        color: #FFD633;
+    .marca span {
+        color: #ffd633;
     }
 
     .slogan {
-        margin-bottom: 7mm;
-        color: #FFE58A;
-        font-size: 10pt;
-        font-weight: bold;
+        margin-top: 4mm;
+        color: #ffe58a;
+        font-size: 9pt;
+        font-weight: 800;
         letter-spacing: 2px;
     }
 
-    .chamada {
-        margin-bottom: 5mm;
-        font-size: 14pt;
-        font-weight: bold;
+    .separador {
+        width: 25mm;
+        height: 1mm;
+        margin: 7mm auto;
+        border-radius: 99px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            #ffd633,
+            #fff0a3,
+            #ffd633,
+            transparent
+        );
     }
 
-    .qr-area {
+    .etiqueta {
+        display: inline-block;
+        margin-bottom: 5mm;
+        padding: 2.5mm 5mm;
+        color: #ffe58a;
+        border: 1px solid rgba(255, 214, 51, .65);
+        border-radius: 99px;
+        background: rgba(255, 214, 51, .08);
+        font-size: 8pt;
+        font-weight: 800;
+        letter-spacing: 2px;
+    }
+
+    h2 {
+        margin: 0 auto 4mm;
+        color: #ffffff;
+        font-size: 21pt;
+        font-weight: 900;
+        line-height: 1.15;
+    }
+
+    .subtitulo {
+        max-width: 125mm;
+        margin: 0 auto 7mm;
+        color: #dceaff;
+        font-size: 10pt;
+        line-height: 1.5;
+    }
+
+    .qr-moldura {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 72mm;
-        height: 72mm;
-        margin: 0 auto 5mm;
+        width: 84mm;
+        height: 84mm;
+        margin: 0 auto;
         padding: 4mm;
+        border: 2mm solid #ffd633;
+        border-radius: 5mm;
+        background: linear-gradient(
+            145deg,
+            #fff0a3,
+            #ffd633,
+            #dba91a
+        );
+        box-shadow: 0 0 0 1mm rgba(255, 255, 255, .12);
+    }
+
+    .qr-fundo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 2mm;
         background: #ffffff;
-        border: 2mm solid #FFD633;
-        break-inside: avoid;
-        page-break-inside: avoid;
+        border-radius: 2mm;
     }
 
     #qr-impressao {
         display: block;
-        width: 60mm;
-        height: 60mm;
-        max-width: none;
-        margin: 0;
-        padding: 0;
+        width: 70mm;
+        height: 70mm;
         object-fit: contain;
     }
 
-    .instrucao {
-        margin-top: 4mm;
-        font-size: 12pt;
-        font-weight: bold;
+    .chamada {
+        margin-top: 7mm;
+        color: #ffd633;
+        font-size: 14pt;
+        font-weight: 900;
+        letter-spacing: .5px;
     }
 
-    .endereco {
+    .instrucao {
         margin-top: 3mm;
-        overflow-wrap: anywhere;
-        font-size: 8pt;
         color: #ffffff;
+        font-size: 10pt;
+        font-weight: 600;
+    }
+
+    .rodape {
+        margin-top: 9mm;
+        padding-top: 5mm;
+        border-top: 1px solid rgba(255, 255, 255, .25);
+        color: #ffe58a;
+        font-size: 8pt;
+        font-weight: 800;
+        letter-spacing: 1.5px;
     }
 
     @media print {
         html, body {
+            width: 100%;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        .totem-impressao {
-            break-inside: avoid !important;
-            page-break-inside: avoid !important;
+        .folha {
+            min-height: 0;
+            padding: 0;
         }
 
-        #qr-impressao {
-            visibility: visible !important;
+        .cartaz {
+            break-inside: avoid;
+            page-break-inside: avoid;
         }
     }
 </style>
 </head>
 
 <body>
-    <main class="totem-impressao">
-        <h1>FIBRA<span>SOL</span></h1>
-        <div class="slogan">QUALIDADE E AGILIDADE NA ENTREGA</div>
+    <main class="folha">
+        <section class="cartaz">
+            <div class="faixa-superior"></div>
 
-        <div class="chamada">
-            ESCANEIE O QR CODE E FAÇA SEU CADASTRO
-        </div>
+            <h1 class="marca">FIBRA<span>SOL</span></h1>
 
-        <div class="qr-area">
-            <img
-                id="qr-impressao"
-                src="${imagemQR}"
-                alt="QR Code de cadastro FibraSol"
-            >
-        </div>
+            <div class="slogan">
+                QUALIDADE E AGILIDADE NA ENTREGA
+            </div>
 
-        <div class="instrucao">
-            Aponte a câmera do celular para o código
-        </div>
+            <div class="separador"></div>
 
-        <div class="endereco">${enderecoPagina}</div>
+            <div class="etiqueta">CREDENCIAMENTO OFICIAL</div>
+
+            <h2>A FIBRA NO DNA NORDESTINO</h2>
+
+            <p class="subtitulo">
+                Faça seu cadastro e venha se conectar com a
+                FibraSol neste momento especial!
+            </p>
+
+            <div class="qr-moldura">
+                <div class="qr-fundo">
+                    <img
+                        id="qr-impressao"
+                        src="${qr}"
+                        alt="QR Code oficial FibraSol"
+                    >
+                </div>
+            </div>
+
+            <div class="chamada">
+                ESCANEIE E FAÇA SEU CADASTRO
+            </div>
+
+            <div class="instrucao">
+                Aponte a câmera do celular para o QR Code.
+            </div>
+
+            <div class="rodape">
+                FIBRASOL • CONECTANDO PESSOAS E CRIANDO VALOR
+            </div>
+        </section>
     </main>
 
 <script>
-    let impressaoIniciada = false;
+    let iniciado = false;
 
-    function iniciarImpressao() {
-        if (impressaoIniciada) return;
-        impressaoIniciada = true;
+    function iniciar() {
+        if (iniciado) return;
+        iniciado = true;
 
         setTimeout(() => {
             window.focus();
             window.print();
-        }, 300);
+        }, 400);
     }
 
-    document.getElementById("qr-impressao").addEventListener(
-        "load",
-        iniciarImpressao,
-        { once: true }
-    );
+    const qrImg = document.getElementById("qr-impressao");
 
-    document.getElementById("qr-impressao").addEventListener(
-        "error",
-        () => {
-            alert("Erro ao carregar o QR Code.");
-        },
-        { once: true }
-    );
+    qrImg.addEventListener("load", iniciar, { once: true });
+
+    qrImg.addEventListener("error", () => {
+        alert("Não foi possível carregar o QR Code.");
+    }, { once: true });
 
     window.addEventListener("afterprint", () => {
         window.__impressaoTotemEmAndamento = false;
     });
 
-    if (document.getElementById("qr-impressao").complete &&
-        document.getElementById("qr-impressao").naturalWidth > 0) {
-        iniciarImpressao();
+    if (qrImg.complete && qrImg.naturalWidth > 0) {
+        iniciar();
     }
 </script>
 </body>
