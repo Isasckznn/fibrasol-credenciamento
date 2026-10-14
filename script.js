@@ -1017,50 +1017,168 @@ document.addEventListener("DOMContentLoaded", function () {
    FIM DO SCRIPT FIBRASOL
    ========================================================== */
 
-
 /* ==========================================================
-   FIBRASOL — IMPRESSÃO DO TOTEM
+   FIBRASOL — IMPRESSÃO ISOLADA DO QR CODE
    ========================================================== */
 
 function imprimirTotem() {
-    const secaoTotem = document.getElementById("section-totem");
-    const container = document.getElementById("qrcode-container");
-
-    if (!secaoTotem || !container) {
-        alert("Não foi possível encontrar a área do Totem QR.");
-        return;
-    }
+    const enderecoPagina =
+        "https://isasckznn.github.io/fibrasol-credenciamento/cadastro.html";
 
     if (typeof QRCode === "undefined") {
         alert("O gerador de QR Code não foi carregado. Recarregue a página.");
         return;
     }
 
-    // Endereço oficial da página pública de cadastro
-    const enderecoPagina =
-        "https://isasckznn.github.io/fibrasol-credenciamento/cadastro.html";
+    // Abre a janela durante o clique para evitar bloqueio do navegador.
+    const janelaImpressao = window.open("", "_blank");
 
-    // Gera novamente o QR Code com o endereço correto
-    container.innerHTML = "";
+    if (!janelaImpressao) {
+        alert(
+            "O navegador bloqueou a janela de impressão. " +
+            "Permita pop-ups para este site e tente novamente."
+        );
+        return;
+    }
 
-    new QRCode(container, {
-        text: enderecoPagina,
-        width: 320,
-        height: 320,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    // Cria o QR em alta resolução, fora do layout do Totem.
+    const areaTemporaria = document.createElement("div");
 
-    // Aguarda a geração do QR Code antes de abrir a impressão
+    areaTemporaria.style.cssText =
+        "position:fixed;left:-10000px;top:0;width:800px;height:800px;";
+
+    document.body.appendChild(areaTemporaria);
+
+    try {
+        new QRCode(areaTemporaria, {
+            text: enderecoPagina,
+            width: 800,
+            height: 800,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    } catch (erro) {
+        areaTemporaria.remove();
+        janelaImpressao.close();
+
+        console.error("Erro ao gerar QR Code para impressão:", erro);
+        alert("Não foi possível gerar o QR Code para impressão.");
+        return;
+    }
+
+    // Aguarda o desenho do código antes de preparar a impressão.
     window.setTimeout(function () {
-        const qrCode = container.querySelector("canvas, img");
+        const canvas = areaTemporaria.querySelector("canvas");
+        const imagem = areaTemporaria.querySelector("img");
 
-        if (!qrCode) {
-            alert("O QR Code não foi gerado. Tente novamente.");
+        let imagemQR = "";
+
+        try {
+            if (canvas && canvas.width > 0) {
+                imagemQR = canvas.toDataURL("image/png");
+            } else if (imagem && imagem.src) {
+                imagemQR = imagem.src;
+            }
+        } catch (erro) {
+            console.error("Erro ao preparar a imagem do QR:", erro);
+        }
+
+        areaTemporaria.remove();
+
+        if (!imagemQR) {
+            janelaImpressao.close();
+            alert("O QR Code não foi renderizado corretamente. Tente novamente.");
             return;
         }
 
-        window.print();
-    }, 1000);
+        janelaImpressao.document.open();
+        janelaImpressao.document.write(`
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>QR Code FibraSol</title>
+                <style>
+                    @page {
+                        size: A4 portrait;
+                        margin: 15mm;
+                    }
+
+                    * {
+                        box-sizing: border-box;
+                    }
+
+                    html, body {
+                        margin: 0;
+                        padding: 0;
+                        background: #ffffff;
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                    }
+
+                    main {
+                        width: 100%;
+                        padding-top: 15mm;
+                    }
+
+                    h1 {
+                        margin: 0 0 8mm;
+                        color: #002B66;
+                        font-size: 20pt;
+                    }
+
+                    p {
+                        margin: 0 0 8mm;
+                        color: #222222;
+                        font-size: 11pt;
+                    }
+
+                    img {
+                        display: block;
+                        width: 75mm;
+                        height: 75mm;
+                        margin: 0 auto;
+                        padding: 3mm;
+                        background: #ffffff;
+                        image-rendering: pixelated;
+                    }
+
+                    .endereco {
+                        max-width: 150mm;
+                        margin: 8mm auto 0;
+                        overflow-wrap: anywhere;
+                        color: #333333;
+                        font-size: 9pt;
+                    }
+                </style>
+            </head>
+            <body>
+                <main>
+                    <h1>FIBRASOL</h1>
+                    <p>Escaneie o QR Code para realizar seu cadastro.</p>
+                    <img id="qr-impressao" alt="QR Code para cadastro de participantes">
+                    <div class="endereco">${enderecoPagina}</div>
+                </main>
+            </body>
+            </html>
+        `);
+        janelaImpressao.document.close();
+
+        const imagemImpressao =
+            janelaImpressao.document.getElementById("qr-impressao");
+
+        imagemImpressao.onload = function () {
+            janelaImpressao.focus();
+            janelaImpressao.print();
+        };
+
+        imagemImpressao.onerror = function () {
+            alert("Não foi possível carregar o QR Code na página de impressão.");
+        };
+
+        imagemImpressao.src = imagemQR;
+
+    }, 700);
 }
