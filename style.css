@@ -1659,137 +1659,11 @@ header .header-wind-three {
     filter: brightness(0) invert(1) !important;
 }
 
+
 /* ==========================================================
    FIBRASOL — IMPRESSÃO DO TOTEM QR CODE EM A4
+   VERSÃO UNIFICADA — QR LEGÍVEL
    ========================================================== */
-
-@media print {
-
-    @page {
-        size: A4 portrait;
-        margin: 8mm;
-    }
-
-    html,
-    body {
-        width: 100% !important;
-        min-height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #ffffff !important;
-        font-family: Arial, sans-serif !important;
-        print-color-adjust: exact !important;
-        -webkit-print-color-adjust: exact !important;
-    }
-
-    body * {
-        visibility: hidden !important;
-    }
-
-    #section-totem,
-    #section-totem * {
-        visibility: visible !important;
-    }
-
-    #section-totem {
-        display: block !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: visible !important;
-    }
-
-    #section-totem .fibrasol-qr-card {
-        width: 100% !important;
-        max-width: 170mm !important;
-        margin: 0 auto !important;
-        padding: 8mm !important;
-        overflow: visible !important;
-        border: 1px solid #d9ad24 !important;
-        border-radius: 8mm !important;
-        box-shadow: none !important;
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        background: #082d60 !important;
-    }
-
-    #section-totem .fibrasol-qr-logo-oficial {
-        width: 60mm !important;
-        max-width: 100% !important;
-        height: 18mm !important;
-        filter: brightness(0) invert(1) !important;
-    }
-
-    #section-totem .fibrasol-qr-mascote-area {
-        display: none !important;
-    }
-
-    #section-totem .fibrasol-qr-frame {
-        width: 76mm !important;
-        max-width: 100% !important;
-        margin: 5mm auto !important;
-        padding: 4mm !important;
-        box-shadow: none !important;
-        break-inside: avoid !important;
-    }
-
-    #section-totem .fibrasol-qr-white-area {
-        min-height: 0 !important;
-        padding: 3mm !important;
-        background: #ffffff !important;
-    }
-
-    #qrcode-container {
-        width: 60mm !important;
-        height: 60mm !important;
-        max-width: none !important;
-        margin: 0 auto !important;
-    }
-
-    #qrcode-container img,
-    #qrcode-container canvas {
-        display: block !important;
-        width: 60mm !important;
-        height: 60mm !important;
-        max-width: none !important;
-        image-rendering: pixelated !important;
-    }
-
-    #section-totem .fibrasol-qr-instruction {
-        margin-top: 5mm !important;
-        padding: 4mm !important;
-        break-inside: avoid !important;
-    }
-
-    #section-totem .fibrasol-qr-footer {
-        margin-top: 5mm !important;
-        padding-top: 4mm !important;
-        font-size: 8pt !important;
-    }
-
-    #section-totem .fibrasol-qr-light {
-        display: none !important;
-    }
-
-    #section-admin,
-    #modal-auth,
-    header,
-    footer,
-    nav,
-    button {
-        display: none !important;
-    }
-}
-
-
-/* ==========================================================
-   FIBRASOL — IMPRESSÃO DO TOTEM EM A4
-   ========================================================== */
-
 
 @media screen {
     .no-print {
@@ -1797,8 +1671,8 @@ header .header-wind-three {
     }
 }
 
-
 @media print {
+
     @page {
         size: A4 portrait;
         margin: 8mm;
@@ -1806,10 +1680,11 @@ header .header-wind-three {
 
     html,
     body {
+        width: auto !important;
+        min-height: 0 !important;
         margin: 0 !important;
         padding: 0 !important;
-        min-height: 0 !important;
-        background: #fff !important;
+        background: #ffffff !important;
         print-color-adjust: exact !important;
         -webkit-print-color-adjust: exact !important;
     }
@@ -1830,20 +1705,28 @@ header .header-wind-three {
         left: 0 !important;
         width: 100% !important;
         max-width: none !important;
+        height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
     }
 
     #section-totem .fibrasol-qr-card {
+        display: block !important;
         width: 100% !important;
         max-width: 170mm !important;
+        height: auto !important;
         margin: 0 auto !important;
-        padding: 8mm !important;
-        border-radius: 8mm !important;
+        padding: 7mm !important;
+        overflow: visible !important;
+        border: 1px solid #d9ad24 !important;
+        border-radius: 5mm !important;
+        background: #002B66 !important;
         box-shadow: none !important;
+        transform: none !important;
         break-inside: avoid !important;
         page-break-inside: avoid !important;
-        background: #002B66 !important;
     }
 
     #section-totem .fibrasol-qr-mascote-area,
@@ -1853,18 +1736,45 @@ header .header-wind-three {
     }
 
     #section-totem .fibrasol-qr-frame {
-        width: 76mm !important;
+        display: block !important;
+        position: relative !important;
+        width: 78mm !important;
         max-width: 100% !important;
+        height: auto !important;
         margin: 5mm auto !important;
+        padding: 3mm !important;
+        overflow: visible !important;
+        background: #ffffff !important;
         box-shadow: none !important;
+        transform: none !important;
         break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    #section-totem .fibrasol-qr-white-area {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        min-height: 0 !important;
+        height: auto !important;
+        padding: 5mm !important;
+        overflow: visible !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #ffffff !important;
     }
 
     #qrcode-container {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        background: #fff !important;
+        display: block !important;
+        flex: 0 0 auto !important;
+        width: 60mm !important;
+        height: 60mm !important;
+        max-width: none !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        background: #ffffff !important;
     }
 
     #qrcode-container img,
@@ -1873,19 +1783,37 @@ header .header-wind-three {
         width: 60mm !important;
         height: 60mm !important;
         max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        object-fit: fill !important;
+        image-rendering: pixelated !important;
     }
 
-    #section-totem .fibrasol-qr-instruction,
+    #section-totem .fibrasol-qr-instruction {
+        display: flex !important;
+        margin-top: 4mm !important;
+        padding: 3mm !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
     #section-totem .fibrasol-qr-footer {
+        display: flex !important;
+        margin-top: 4mm !important;
+        padding-top: 3mm !important;
+        font-size: 8pt !important;
         break-inside: avoid !important;
     }
 
-    header,
-    footer,
     #section-admin,
     #section-cadastro,
     #section-sucesso,
-    #modal-auth {
+    #modal-auth,
+    header,
+    body > footer,
+    nav,
+    button {
         display: none !important;
     }
 }
