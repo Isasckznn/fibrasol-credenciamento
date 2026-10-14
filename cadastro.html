@@ -34,200 +34,383 @@
 
   <style>
   
+
 /* =========================================================
-   FIBRASOL — PRAIA PREMIUM
-   CSS exclusivo da página cadastro.html
+   FIBRASOL — CREDENCIAMENTO PRAIA PREMIUM
+   Design exclusivo de cadastro.html
    ========================================================= */
+
+:root {
+    --fibra-azul: #002b66;
+    --fibra-ciano: #00a8ff;
+    --fibra-amarelo: #ffc800;
+    --fibra-areia: #f7e2b8;
+}
+
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     min-height: 100vh;
     margin: 0;
-    background: #eaf6ff;
+    background: #eaf7ff;
+    overflow-x: hidden;
 }
 
-/* CENÁRIO PRINCIPAL */
+header {
+    position: relative;
+    z-index: 10;
+}
+
+/* CABEÇALHO COM PROFUNDIDADE */
+
+header:first-of-type {
+    background:
+        radial-gradient(ellipse at 15% 0%, rgba(0,168,255,.3), transparent 50%),
+        linear-gradient(115deg, #001b46, #004a98 55%, #002b66) !important;
+    box-shadow: 0 8px 28px rgba(0, 43, 102, .22);
+}
+
+/* FAIXA DE FRASES EM MOVIMENTO */
+
+header > div:last-child {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,.15);
+    background: #001d49 !important;
+    padding: 12px 0 !important;
+}
+
+header > div:last-child > div {
+    display: block;
+    width: max-content;
+    white-space: nowrap;
+    text-align: left !important;
+    padding-left: 100%;
+    animation: faixaFibraSol 25s linear infinite;
+    will-change: transform;
+}
+
+header > div:last-child:hover > div {
+    animation-play-state: paused;
+}
+
+@keyframes faixaFibraSol {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+}
+
+/* CENÁRIO DA PRAIA */
 
 .cadastro-publico {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    min-height: 650px;
+    min-height: 790px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 48px 24px 80px;
+    justify-content: flex-end;
+    padding: 75px max(5%, calc((100% - 1180px) / 2));
     background:
-        radial-gradient(
-            circle at 83% 12%,
-            rgba(255, 239, 163, .8) 0,
-            rgba(255, 239, 163, 0) 19%
-        ),
+        radial-gradient(ellipse at 80% 12%, rgba(255,255,255,.8), transparent 24%),
         linear-gradient(
             180deg,
-            #87d8f5 0%,
-            #d9f4ff 34%,
-            #effbff 46%,
-            #5bc6df 47%,
-            #159bbd 62%,
-            #f8e6c7 62.5%,
-            #f3d5a4 100%
+            #72cff1 0%,
+            #d9f5ff 35%,
+            #f4fcff 43%,
+            #54c9df 44%,
+            #0798bd 56%,
+            #55c7d8 62%,
+            #f9e5bd 62.5%,
+            #f0cd91 100%
         );
 }
+
+/* REFLEXO DE LUZ NO CÉU */
 
 .cadastro-publico::before {
     content: "";
     position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
     background:
-        linear-gradient(
-            115deg,
-            rgba(255,255,255,.35),
-            transparent 42%,
-            rgba(255,255,255,.12)
-        );
+        radial-gradient(ellipse at 10% 70%, rgba(255,255,255,.38), transparent 28%),
+        linear-gradient(125deg, rgba(255,255,255,.22), transparent 42%);
 }
+
+/* TEXTURA DA AREIA */
 
 .cadastro-publico::after {
     content: "";
     position: absolute;
-    z-index: -1;
     left: -10%;
-    bottom: 10%;
+    bottom: -48px;
     width: 120%;
-    height: 85px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.2);
-    transform: rotate(-2deg);
+    height: 150px;
+    z-index: 1;
     pointer-events: none;
+    border-radius: 50% 50% 0 0;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.45), transparent 45%),
+        linear-gradient(180deg, rgba(255,240,205,.55), #f4d7a5);
+    box-shadow: 0 -12px 35px rgba(255,255,255,.18);
 }
 
-/* SOL */
+/* SOL COM BRILHO */
 
 .sol-publico {
     position: absolute;
-    top: 45px;
-    right: 11%;
-    width: 108px;
-    height: 108px;
+    top: 58px;
+    right: 13%;
+    width: 112px;
+    height: 112px;
     border-radius: 50%;
-    background:
-        radial-gradient(
-            circle at 32% 28%,
-            #fff9cf 0%,
-            #ffe77e 42%,
-            #ffc800 78%,
-            #f5a900 100%
-        );
-    box-shadow:
-        0 0 0 15px rgba(255, 222, 92, .18),
-        0 0 0 32px rgba(255, 222, 92, .1),
-        0 0 65px rgba(255, 203, 50, .35);
-    animation: brilhoSol 5s ease-in-out infinite;
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
+    background: radial-gradient(circle at 32% 28%, #fffde0, #ffe56c 48%, #ffc000 78%);
+    box-shadow:
+        0 0 0 15px rgba(255,220,75,.2),
+        0 0 0 34px rgba(255,220,75,.12),
+        0 0 75px rgba(255,211,55,.5);
+    animation: solRespira 5s ease-in-out infinite;
+}
+
+@keyframes solRespira {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.07); filter: brightness(1.08); }
 }
 
 /* NUVENS */
 
 .nuvem-publica {
     position: absolute;
-    width: 120px;
-    height: 30px;
-    background: rgba(255,255,255,.88);
+    width: 130px;
+    height: 32px;
     border-radius: 50px;
-    filter: drop-shadow(0 8px 12px rgba(0, 80, 120, .06));
-    animation: moverNuvem 28s linear infinite;
-    z-index: -1;
+    background: rgba(255,255,255,.9);
+    filter: drop-shadow(0 8px 12px rgba(0,60,110,.08));
+    z-index: 1;
     pointer-events: none;
+    animation: nuvemPasseia 34s linear infinite;
 }
 
 .nuvem-publica::before,
 .nuvem-publica::after {
     content: "";
     position: absolute;
-    background: inherit;
+    bottom: 4px;
     border-radius: 50%;
+    background: inherit;
 }
 
 .nuvem-publica::before {
-    width: 48px;
-    height: 48px;
+    width: 53px;
+    height: 53px;
     left: 18px;
-    bottom: 5px;
 }
 
 .nuvem-publica::after {
-    width: 62px;
-    height: 62px;
-    right: 18px;
-    bottom: 0;
+    width: 66px;
+    height: 66px;
+    right: 15px;
 }
 
 .nuvem-um {
-    top: 100px;
-    left: -150px;
+    top: 105px;
+    left: -190px;
 }
 
 .nuvem-dois {
-    top: 205px;
-    left: -230px;
-    transform: scale(.7);
-    opacity: .75;
-    animation-delay: -13s;
+    top: 225px;
+    left: -260px;
+    transform: scale(.72);
+    opacity: .78;
+    animation-duration: 45s;
+    animation-delay: -20s;
 }
 
-/* ONDAS */
+@keyframes nuvemPasseia {
+    from { translate: 0 0; }
+    to { translate: calc(100vw + 500px) 0; }
+}
+
+/* ONDAS EM CAMADAS */
 
 .onda-publica {
     position: absolute;
-    left: -10%;
+    left: -12%;
     bottom: 27%;
-    width: 120%;
-    height: 48px;
+    width: 124%;
+    height: 65px;
     border-radius: 50%;
-    background: rgba(255,255,255,.24);
-    transform: rotate(-2deg);
-    animation: moverOnda 8s ease-in-out infinite;
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
+    background: rgba(255,255,255,.28);
+    border-top: 2px solid rgba(255,255,255,.52);
+    box-shadow: 0 -12px 25px rgba(255,255,255,.08);
+    animation: ondaVaiVolta 8s ease-in-out infinite;
+}
+
+@keyframes ondaVaiVolta {
+    0%, 100% { transform: translateX(-2%) rotate(-2deg); }
+    50% { transform: translateX(2%) rotate(1deg); }
 }
 
 /* MASCOTE */
 
 .mascote-publico {
     position: absolute;
-    left: max(2%, calc(50% - 590px));
-    bottom: 2%;
-    width: clamp(180px, 24vw, 320px);
-    max-height: 390px;
+    left: max(4%, calc(50% - 585px));
+    bottom: 20px;
+    width: clamp(230px, 27vw, 365px);
+    max-height: 440px;
     object-fit: contain;
     object-position: bottom center;
-    filter: drop-shadow(0 17px 18px rgba(0, 43, 102, .2));
-    animation: flutuarMascote 5s ease-in-out infinite;
-    z-index: -1;
+    z-index: 2;
     pointer-events: none;
+    filter: drop-shadow(0 20px 20px rgba(0,43,102,.24));
+    animation: mascoteVivo 5s ease-in-out infinite;
+}
+
+@keyframes mascoteVivo {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+/* FOLHAS TROPICAIS — COMPLEMENTO AOS CANTOS */
+
+.folhas-coqueiro {
+    position: absolute;
+    top: -18px;
+    width: 285px;
+    height: 235px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: .94;
+}
+
+.folhas-esquerda {
+    left: -35px;
+    transform: rotate(-8deg);
+}
+
+.folhas-direita {
+    right: -35px;
+    transform: scaleX(-1) rotate(-8deg);
+}
+
+.folhas-coqueiro::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(72deg, transparent 47%, #74552b 48%, #9d783e 49%, transparent 50%),
+        repeating-conic-gradient(
+            from 225deg at 48% 8%,
+            #064b37 0deg 5deg,
+            #14794c 5deg 9deg,
+            #2da064 9deg 12deg,
+            transparent 12deg 16deg
+        );
+    clip-path: polygon(
+        45% 0, 56% 0, 62% 16%, 83% 10%,
+        71% 22%, 100% 28%, 73% 32%,
+        92% 45%, 65% 39%, 77% 59%,
+        57% 43%, 60% 69%, 48% 48%,
+        39% 77%, 38% 48%, 16% 66%,
+        31% 41%, 0 45%, 29% 30%,
+        12% 16%, 38% 25%
+    );
+    filter: drop-shadow(0 8px 5px rgba(0,45,24,.15));
+}
+
+/* CHAMADA VISUAL AO LADO DO FORMULÁRIO */
+
+.chamada-praia {
+    position: absolute;
+    z-index: 3;
+    left: max(5%, calc(50% - 590px));
+    top: 24%;
+    width: min(40%, 440px);
+    color: var(--fibra-azul);
+    pointer-events: none;
+    animation: entradaChamada .9s ease both;
+}
+
+.chamada-praia .chamada-selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 99px;
+    background: rgba(255,255,255,.55);
+    box-shadow: 0 8px 22px rgba(0,65,120,.08);
+    backdrop-filter: blur(8px);
+    color: #004b8f;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+.chamada-praia h2 {
+    margin: 20px 0 12px;
+    color: #002b66;
+    font-size: clamp(30px, 3.3vw, 49px);
+    line-height: 1.02;
+    font-weight: 1000;
+    letter-spacing: -.045em;
+    text-shadow: 0 2px 0 rgba(255,255,255,.28);
+}
+
+.chamada-praia h2 span {
+    color: #007fc4;
+    text-shadow: 0 2px 0 rgba(255,255,255,.3);
+}
+
+.chamada-praia p {
+    max-width: 360px;
+    color: #245270;
+    font-size: 15px;
+    line-height: 1.75;
+    font-weight: 600;
+}
+
+.chamada-praia .traco-amarelo {
+    width: 82px;
+    height: 6px;
+    margin-top: 20px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #ffc800, #ffed8b);
+    box-shadow: 0 4px 12px rgba(255,200,0,.22);
+}
+
+@keyframes entradaChamada {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* CARTÃO DO CADASTRO */
 
 .cartao-cadastro {
     position: relative;
-    width: min(100%, 570px);
-    margin-left: auto;
-    margin-right: max(0px, calc((100% - 1120px) / 2));
-    padding: clamp(24px, 4vw, 38px);
+    z-index: 4;
+    width: min(100%, 535px);
+    margin: 0 0 0 auto;
+    padding: clamp(25px, 3.1vw, 36px);
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,.96);
-    border-radius: 25px;
+    border: 1px solid rgba(255,255,255,.95);
+    border-radius: 26px;
     background: rgba(255,255,255,.96);
     box-shadow:
-        0 28px 75px rgba(0, 43, 102, .19),
-        0 5px 18px rgba(0, 43, 102, .06);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    animation: entradaCartao .65s ease both;
+        0 32px 85px rgba(0,43,102,.22),
+        0 8px 24px rgba(0,43,102,.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    animation: entradaCartao .75s ease both;
 }
 
 .cartao-cadastro::before {
@@ -236,59 +419,38 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 5px;
-    background: linear-gradient(
-        90deg,
-        #002B66,
-        #00A8FF 55%,
-        #FFC800
-    );
+    height: 6px;
+    background: linear-gradient(90deg, #002b66, #00a8ff 55%, #ffc800);
+}
+
+.cartao-cadastro::after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: -55px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,255,.08), transparent 70%);
+    pointer-events: none;
+}
+
+/* TÍTULO INTERNO */
+
+.cartao-cadastro h1 {
+    letter-spacing: -.035em;
+}
+
+.cartao-cadastro .text-center.mb-7 {
+    position: relative;
+}
+
+.cartao-cadastro .text-center.mb-7 > span {
+    border: 1px solid #d8ebfb;
+    background: linear-gradient(110deg, #eff8ff, #fff9df);
 }
 
 /* CAMPOS */
-
-.campo-publico {
-    display: block;
-    width: 100%;
-    min-height: 49px;
-    padding: 12px 14px;
-    color: #173451;
-    background: #f7fafd;
-    border: 1px solid #dce7f1;
-    border-radius: 12px;
-    outline: none;
-    font-size: 13px;
-    font-weight: 500;
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
-}
-
-.campo-publico::placeholder {
-    color: #9aaabd;
-}
-
-.campo-publico:hover {
-    border-color: #b7d2e9;
-    background: #fff;
-}
-
-.campo-publico:focus {
-    background: #fff;
-    border-color: #008bd2;
-    box-shadow: 0 0 0 4px rgba(0,168,255,.12);
-}
-
-.campo-publico:focus-visible {
-    outline: none;
-}
-
-textarea.campo-publico {
-    min-height: 75px;
-}
-
-/* RÓTULOS */
 
 .rotulo-publico {
     display: block;
@@ -296,29 +458,60 @@ textarea.campo-publico {
     color: #27425e;
     font-size: 10px;
     font-weight: 900;
-    letter-spacing: .075em;
+    letter-spacing: .085em;
     text-transform: uppercase;
 }
 
-/* BOTÃO DE ENVIO */
+.campo-publico {
+    display: block;
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    border: 1px solid #d9e6f1;
+    border-radius: 13px;
+    outline: none;
+    background: #f7fafd;
+    color: #173451;
+    font-size: 13px;
+    font-weight: 500;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.campo-publico::placeholder {
+    color: #9aabba;
+}
+
+.campo-publico:hover {
+    border-color: #a9cde8;
+    background: #fff;
+}
+
+.campo-publico:focus {
+    border-color: #008bd2;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(0,168,255,.12);
+}
+
+textarea.campo-publico {
+    min-height: 78px;
+}
+
+/* BOTÃO */
 
 .botao-publico {
     position: relative;
-    min-height: 53px;
+    min-height: 55px;
     border: 0;
-    border-radius: 12px;
-    background: linear-gradient(110deg, #002B66, #0066CC 62%, #008fdc);
-    box-shadow: 0 10px 23px rgba(0, 75, 159, .2);
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        filter .2s ease;
+    border-radius: 13px;
+    background: linear-gradient(110deg, #002b66, #0066cc 62%, #008fdc);
+    box-shadow: 0 11px 25px rgba(0,75,159,.23);
+    transition: transform .2s, box-shadow .2s, filter .2s;
 }
 
 .botao-publico:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 15px 28px rgba(0, 75, 159, .28);
-    filter: saturate(1.1);
+    box-shadow: 0 16px 30px rgba(0,75,159,.3);
+    filter: saturate(1.12);
 }
 
 .botao-publico:active:not(:disabled) {
@@ -331,146 +524,176 @@ textarea.campo-publico {
 }
 
 .botao-publico:disabled {
-    opacity: .65;
+    opacity: .7;
     cursor: wait;
 }
 
-/* ANIMAÇÕES */
-
-@keyframes brilhoSol {
-    0%, 100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.055);
-    }
-}
-
-@keyframes moverNuvem {
-    from {
-        translate: 0 0;
-    }
-
-    to {
-        translate: calc(100vw + 450px) 0;
-    }
-}
-
-@keyframes moverOnda {
-    0%, 100% {
-        transform: translateX(-2%) rotate(-2deg);
-    }
-
-    50% {
-        transform: translateX(2%) rotate(1deg);
-    }
-}
-
-@keyframes flutuarMascote {
-    0%, 100% {
-        transform: translateY(0) rotate(-1deg);
-    }
-
-    50% {
-        transform: translateY(-9px) rotate(1deg);
-    }
-}
-
 @keyframes entradaCartao {
-    from {
-        opacity: 0;
-        transform: translateY(14px);
-    }
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* RODAPÉ */
+
+footer {
+    position: relative;
+    z-index: 5;
+    background: linear-gradient(100deg, #001b46, #003c80, #002b66) !important;
+    box-shadow: 0 -6px 25px rgba(0,43,102,.08);
 }
 
 /* TABLETS */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .cadastro-publico {
-        min-height: 610px;
-        padding: 35px 22px 65px;
+        min-height: 740px;
+        padding: 55px 24px 70px;
+    }
+
+    .chamada-praia {
+        top: 8%;
+        left: 6%;
+        width: 35%;
+    }
+
+    .chamada-praia h2 {
+        font-size: clamp(25px, 3.4vw, 36px);
+    }
+
+    .chamada-praia p {
+        font-size: 13px;
     }
 
     .cartao-cadastro {
-        width: min(100%, 530px);
-        margin-right: 0;
+        width: min(58%, 510px);
     }
 
     .mascote-publico {
-        left: -35px;
-        width: 200px;
-        opacity: .38;
+        width: 220px;
+        opacity: .8;
     }
 
-    .sol-publico {
-        width: 85px;
-        height: 85px;
+    .folhas-coqueiro {
+        transform: scale(.78);
+        transform-origin: top left;
+    }
+
+    .folhas-direita {
+        transform: scaleX(-1) scale(.78);
+        transform-origin: top right;
     }
 }
 
 /* CELULARES */
 
 @media (max-width: 640px) {
+    header > div:last-child {
+        padding: 10px 0 !important;
+    }
+
+    header > div:last-child > div {
+        animation-duration: 20s;
+        font-size: 11px;
+    }
+
     .cadastro-publico {
         min-height: 0;
-        padding: 28px 13px 54px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 155px 13px 55px;
         background:
-            radial-gradient(
-                circle at 88% 7%,
-                rgba(255, 225, 110, .36),
-                transparent 22%
-            ),
+            radial-gradient(circle at 85% 9%, rgba(255,224,110,.45), transparent 19%),
             linear-gradient(
                 180deg,
-                #a4e4f8 0%,
-                #e8f8ff 34%,
-                #70cfe3 47%,
-                #159bbd 62%,
-                #f7e7ce 62.5%,
-                #f5d5a0 100%
+                #85d8f3 0%,
+                #e8f8ff 28%,
+                #8bd9e7 38%,
+                #139bbd 48%,
+                #f8e4bd 49%,
+                #f0d09b 100%
             );
     }
 
     .sol-publico {
-        top: 25px;
-        right: 7%;
-        width: 65px;
-        height: 65px;
+        top: 36px;
+        right: 12%;
+        width: 67px;
+        height: 67px;
     }
 
     .nuvem-um {
-        top: 75px;
+        top: 62px;
     }
 
     .nuvem-dois {
-        top: 155px;
+        top: 112px;
+    }
+
+    .folhas-coqueiro {
+        top: -24px;
+        width: 190px;
+        height: 165px;
+        opacity: .9;
+    }
+
+    .folhas-esquerda {
+        left: -37px;
+    }
+
+    .folhas-direita {
+        right: -37px;
+        transform: scaleX(-1);
+    }
+
+    .chamada-praia {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        margin: 0 0 23px;
+        text-align: center;
+    }
+
+    .chamada-praia h2 {
+        max-width: 400px;
+        margin: 14px auto 9px;
+        font-size: clamp(28px, 8vw, 36px);
+    }
+
+    .chamada-praia p {
+        max-width: 340px;
+        margin: 0 auto;
+        font-size: 13px;
+    }
+
+    .chamada-praia .traco-amarelo {
+        margin: 15px auto 0;
+    }
+
+    .chamada-praia .chamada-selo {
+        font-size: 9px;
     }
 
     .mascote-publico {
-        left: -24px;
+        left: -45px;
         bottom: 0;
-        width: 140px;
-        max-height: 200px;
-        opacity: .3;
+        width: 150px;
+        max-height: 190px;
+        opacity: .55;
     }
 
     .onda-publica {
-        bottom: 25%;
+        bottom: 24%;
     }
 
     .cartao-cadastro {
         width: 100%;
         margin: 0;
         padding: 25px 19px;
-        border-radius: 21px;
+        border-radius: 22px;
         background: rgba(255,255,255,.97);
-        box-shadow: 0 20px 48px rgba(0,43,102,.17);
+        box-shadow: 0 22px 50px rgba(0,43,102,.19);
     }
 
     .campo-publico {
@@ -486,7 +709,9 @@ textarea.campo-publico {
     .nuvem-publica,
     .onda-publica,
     .mascote-publico,
-    .cartao-cadastro {
+    .cartao-cadastro,
+    .chamada-praia,
+    header > div:last-child > div {
         animation: none !important;
     }
 
@@ -497,6 +722,7 @@ textarea.campo-publico {
         transition-duration: .01ms !important;
     }
 }
+
 
   </style>
 </head>
@@ -548,6 +774,32 @@ textarea.campo-publico {
       <div class="nuvem-publica nuvem-um" aria-hidden="true"></div>
       <div class="nuvem-publica nuvem-dois" aria-hidden="true"></div>
       <div class="onda-publica" aria-hidden="true"></div>
+
+      
+      <!-- Folhagens decorativas -->
+      <div class="folhas-coqueiro folhas-esquerda" aria-hidden="true"></div>
+      <div class="folhas-coqueiro folhas-direita" aria-hidden="true"></div>
+
+      <!-- Chamada visual da praia -->
+      <div class="chamada-praia">
+        <span class="chamada-selo">
+          ☀️ EXPERIÊNCIA FIBRASOL
+        </span>
+
+        <h2>
+          O NORDESTE<br>
+          CONECTADO AO<br>
+          <span>FUTURO.</span>
+        </h2>
+
+        <p>
+          Gente, conexão e novas oportunidades.
+          Faça seu credenciamento e venha fazer parte
+          dessa experiência com a FibraSol!
+        </p>
+
+        <div class="traco-amarelo"></div>
+      </div>
 
       <img
         src="imagens/mascote-fibrasol.png"
