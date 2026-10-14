@@ -1660,9 +1660,10 @@ header .header-wind-three {
 }
 
 
+
 /* ==========================================================
    FIBRASOL — IMPRESSÃO DO TOTEM QR CODE EM A4
-   VERSÃO UNIFICADA — QR LEGÍVEL
+   BLOCO UNIFICADO — SEM REGRAS DUPLICADAS
    ========================================================== */
 
 @media screen {
@@ -1689,10 +1690,12 @@ header .header-wind-three {
         -webkit-print-color-adjust: exact !important;
     }
 
+    /* Oculta o restante da página */
     body * {
         visibility: hidden !important;
     }
 
+    /* Mantém visível somente o Totem */
     #section-totem,
     #section-totem * {
         visibility: visible !important;
@@ -1712,8 +1715,10 @@ header .header-wind-three {
         transform: none !important;
     }
 
+    /* Cartão principal */
     #section-totem .fibrasol-qr-card {
         display: block !important;
+        position: relative !important;
         width: 100% !important;
         max-width: 170mm !important;
         height: auto !important;
@@ -1729,12 +1734,14 @@ header .header-wind-three {
         page-break-inside: avoid !important;
     }
 
+    /* Remove elementos decorativos e controles */
     #section-totem .fibrasol-qr-mascote-area,
     #section-totem .fibrasol-qr-light,
     #section-totem .no-print {
         display: none !important;
     }
 
+    /* Moldura branca do QR */
     #section-totem .fibrasol-qr-frame {
         display: block !important;
         position: relative !important;
@@ -1758,6 +1765,7 @@ header .header-wind-three {
         width: 100% !important;
         min-height: 0 !important;
         height: auto !important;
+        margin: 0 !important;
         padding: 5mm !important;
         overflow: visible !important;
         border: 0 !important;
@@ -1765,49 +1773,56 @@ header .header-wind-three {
         background: #ffffff !important;
     }
 
-    
-    #qrcode-container {
+    /* Contêiner único do QR */
+    #section-totem #qrcode-container {
         display: block !important;
         position: relative !important;
         flex: 0 0 auto !important;
         width: 60mm !important;
         height: 60mm !important;
+        min-width: 60mm !important;
+        min-height: 60mm !important;
         max-width: none !important;
         margin: 0 auto !important;
         padding: 0 !important;
         overflow: hidden !important;
         background: #ffffff !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
     }
 
-    /* Mostra somente a imagem final do QR Code */
-    #qrcode-container img {
-        display: block !important;
-        position: absolute !important;
-        inset: 0 !important;
-        width: 60mm !important;
-        height: 60mm !important;
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        object-fit: contain !important;
-        image-rendering: pixelated !important;
-    }
-
-    /* Impede a impressão do canvas duplicado */
-    #qrcode-container canvas {
+    /*
+       A biblioteca QRCode.js cria canvas e imagem.
+       Na impressão, o canvas fica oculto para não
+       aparecer junto da imagem final.
+    */
+    #section-totem #qrcode-container canvas {
         display: none !important;
         visibility: hidden !important;
     }
 
-
-    /* Impede que outros elementos QR dentro do contêiner
-       apareçam na impressão */
-    #qrcode-container > :not(img) {
-        display: none !important;
+    /* Imagem final do QR Code */
+    #section-totem #qrcode-container img {
+        display: block !important;
+        visibility: visible !important;
+        position: absolute !important;
+        top: 0 !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: 0 !important;
+        width: 60mm !important;
+        height: 60mm !important;
+        min-width: 60mm !important;
+        min-height: 60mm !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        object-fit: contain !important;
+        image-rendering: pixelated !important;
     }
 
-
-
+    /* Instruções */
     #section-totem .fibrasol-qr-instruction {
         display: flex !important;
         margin-top: 4mm !important;
@@ -1817,14 +1832,17 @@ header .header-wind-three {
         page-break-inside: avoid !important;
     }
 
+    /* Rodapé do Totem */
     #section-totem .fibrasol-qr-footer {
         display: flex !important;
         margin-top: 4mm !important;
         padding-top: 3mm !important;
         font-size: 8pt !important;
         break-inside: avoid !important;
+        page-break-inside: avoid !important;
     }
 
+    /* Oculta outras áreas da aplicação */
     #section-admin,
     #section-cadastro,
     #section-sucesso,
