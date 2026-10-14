@@ -1023,345 +1023,264 @@ document.addEventListener("DOMContentLoaded", function () {
    ========================================================== */
 
 function imprimirTotem() {
-    if (window.__impressaoTotemEmAndamento) return;
+
+    // Impede duas impressões simultâneas.
+    if (window.__impressaoTotemEmAndamento) {
+        return;
+    }
 
     window.__impressaoTotemEmAndamento = true;
 
     const enderecoPagina =
         "https://isasckznn.github.io/fibrasol-credenciamento/cadastro.html";
 
-    const janela = window.open("", "_blank");
-
-    if (!janela) {
+    if (typeof QRCode === "undefined") {
         window.__impressaoTotemEmAndamento = false;
-        alert("Permita pop-ups para imprimir o Totem FibraSol.");
+        alert("O gerador de QR Code não foi carregado. Recarregue a página.");
         return;
     }
 
-    const area = document.createElement("div");
-    area.style.cssText =
+    const janelaImpressao = window.open("", "_blank");
+
+    if (!janelaImpressao) {
+        window.__impressaoTotemEmAndamento = false;
+        alert(
+            "O navegador bloqueou a janela de impressão. " +
+            "Permita pop-ups para este site e tente novamente."
+        );
+        return;
+    }
+
+    const areaTemporaria = document.createElement("div");
+
+    areaTemporaria.style.cssText =
         "position:fixed;left:-10000px;top:0;width:800px;height:800px;";
-    document.body.appendChild(area);
 
-    new QRCode(area, {
-        text: enderecoPagina,
-        width: 800,
-        height: 800,
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    document.body.appendChild(areaTemporaria);
 
-    setTimeout(() => {
-        const canvas = area.querySelector("canvas");
-        const imagem = area.querySelector("img");
+    try {
 
-        const qr = canvas
-            ? canvas.toDataURL("image/png")
-            : imagem?.src;
+        new QRCode(areaTemporaria, {
+            text: enderecoPagina,
+            width: 800,
+            height: 800,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
 
-        area.remove();
+    } catch (erro) {
 
-        if (!qr) {
-            janela.close();
+        areaTemporaria.remove();
+        janelaImpressao.close();
+
+        window.__impressaoTotemEmAndamento = false;
+
+        console.error("Erro ao gerar QR Code:", erro);
+        alert("Não foi possível gerar o QR Code para impressão.");
+        return;
+    }
+
+    window.setTimeout(function () {
+
+        const canvas = areaTemporaria.querySelector("canvas");
+        const imagem = areaTemporaria.querySelector("img");
+
+        let imagemQR = "";
+
+        try {
+
+            if (canvas && canvas.width > 0 && canvas.height > 0) {
+                imagemQR = canvas.toDataURL("image/png");
+            } else if (imagem && imagem.src) {
+                imagemQR = imagem.src;
+            }
+
+        } catch (erro) {
+            console.error("Erro ao preparar o QR Code:", erro);
+        }
+
+        areaTemporaria.remove();
+
+        if (!imagemQR) {
+
+            janelaImpressao.close();
             window.__impressaoTotemEmAndamento = false;
-            alert("Não foi possível gerar o QR Code.");
+
+            alert("O QR Code não foi renderizado corretamente. Tente novamente.");
             return;
         }
 
-        janela.document.open();
-        janela.document.write(`<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Totem Oficial FibraSol</title>
+        janelaImpressao.document.open();
 
-<style>
-    @page {
-        size: A4 portrait;
-        margin: 10mm;
-    }
+        janelaImpressao.document.write(`
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>QR Code FibraSol</title>
 
-    * {
-        box-sizing: border-box;
-    }
+                <style>
+                    @page {
+                        size: A4 portrait;
+                        margin: 15mm;
+                    }
 
-    html, body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #ffffff;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
+                    * {
+                        box-sizing: border-box;
+                    }
 
-    body {
-        color: #ffffff;
-        text-align: center;
-    }
+                    html,
+                    body {
+                        width: 100%;
+                        margin: 0;
+                        padding: 0;
+                        background: #ffffff;
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                    }
 
-    .folha {
-        width: 100%;
-        min-height: 265mm;
-        padding: 7mm;
-        background: #ffffff;
-    }
+                    body {
+                        overflow: hidden;
+                    }
 
-    .cartaz {
-        position: relative;
-        width: 100%;
-        max-width: 180mm;
-        margin: 0 auto;
-        padding: 10mm 8mm 8mm;
-        overflow: hidden;
-        border: 1.2mm solid #d9ad24;
-        border-radius: 7mm;
-        background:
-            radial-gradient(
-                circle at 50% 22%,
-                #104b8c 0%,
-                #082d60 42%,
-                #03152f 100%
-            );
-    }
+                    main {
+                        display: block;
+                        width: 100%;
+                        margin: 0 auto;
+                        padding-top: 15mm;
+                        text-align: center;
+                        break-inside: avoid;
+                        page-break-inside: avoid;
+                    }
 
-    .faixa-superior {
-        width: 40mm;
-        height: 2mm;
-        margin: 0 auto 7mm;
-        border-radius: 99px;
-        background: linear-gradient(
-            90deg,
-            #b98913,
-            #fff0a3,
-            #ffd633,
-            #b98913
-        );
-    }
+                    h1 {
+                        margin: 0 0 8mm;
+                        color: #002B66;
+                        font-size: 20pt;
+                    }
 
-    .marca {
-        margin: 0;
-        color: #ffffff;
-        font-size: 35pt;
-        font-weight: 900;
-        font-style: italic;
-        letter-spacing: 2px;
-        line-height: 1;
-    }
+                    p {
+                        margin: 0 0 8mm;
+                        color: #222222;
+                        font-size: 11pt;
+                    }
 
-    .marca span {
-        color: #ffd633;
-    }
+                    #qr-impressao {
+                        display: block;
+                        width: 75mm;
+                        height: 75mm;
+                        margin: 0 auto;
+                        padding: 3mm;
+                        border: 0;
+                        background: #ffffff;
+                        object-fit: contain;
+                        image-rendering: pixelated;
+                        break-inside: avoid;
+                        page-break-inside: avoid;
+                    }
 
-    .slogan {
-        margin-top: 4mm;
-        color: #ffe58a;
-        font-size: 9pt;
-        font-weight: 800;
-        letter-spacing: 2px;
-    }
+                    .endereco {
+                        max-width: 150mm;
+                        margin: 8mm auto 0;
+                        overflow-wrap: anywhere;
+                        color: #333333;
+                        font-size: 9pt;
+                    }
 
-    .separador {
-        width: 25mm;
-        height: 1mm;
-        margin: 7mm auto;
-        border-radius: 99px;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            #ffd633,
-            #fff0a3,
-            #ffd633,
-            transparent
-        );
-    }
+                    @media print {
+                        html,
+                        body {
+                            height: 267mm;
+                            overflow: hidden !important;
+                        }
 
-    .etiqueta {
-        display: inline-block;
-        margin-bottom: 5mm;
-        padding: 2.5mm 5mm;
-        color: #ffe58a;
-        border: 1px solid rgba(255, 214, 51, .65);
-        border-radius: 99px;
-        background: rgba(255, 214, 51, .08);
-        font-size: 8pt;
-        font-weight: 800;
-        letter-spacing: 2px;
-    }
+                        main {
+                            height: 267mm;
+                            overflow: hidden;
+                        }
+                    }
+                </style>
+            </head>
 
-    h2 {
-        margin: 0 auto 4mm;
-        color: #ffffff;
-        font-size: 21pt;
-        font-weight: 900;
-        line-height: 1.15;
-    }
+            <body>
+                <main>
+                    <h1>FIBRASOL</h1>
 
-    .subtitulo {
-        max-width: 125mm;
-        margin: 0 auto 7mm;
-        color: #dceaff;
-        font-size: 10pt;
-        line-height: 1.5;
-    }
+                    <p>
+                        Escaneie o QR Code para realizar seu cadastro.
+                    </p>
 
-    .qr-moldura {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 84mm;
-        height: 84mm;
-        margin: 0 auto;
-        padding: 4mm;
-        border: 2mm solid #ffd633;
-        border-radius: 5mm;
-        background: linear-gradient(
-            145deg,
-            #fff0a3,
-            #ffd633,
-            #dba91a
-        );
-        box-shadow: 0 0 0 1mm rgba(255, 255, 255, .12);
-    }
-
-    .qr-fundo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        padding: 2mm;
-        background: #ffffff;
-        border-radius: 2mm;
-    }
-
-    #qr-impressao {
-        display: block;
-        width: 70mm;
-        height: 70mm;
-        object-fit: contain;
-    }
-
-    .chamada {
-        margin-top: 7mm;
-        color: #ffd633;
-        font-size: 14pt;
-        font-weight: 900;
-        letter-spacing: .5px;
-    }
-
-    .instrucao {
-        margin-top: 3mm;
-        color: #ffffff;
-        font-size: 10pt;
-        font-weight: 600;
-    }
-
-    .rodape {
-        margin-top: 9mm;
-        padding-top: 5mm;
-        border-top: 1px solid rgba(255, 255, 255, .25);
-        color: #ffe58a;
-        font-size: 8pt;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-    }
-
-    @media print {
-        html, body {
-            width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        .folha {
-            min-height: 0;
-            padding: 0;
-        }
-
-        .cartaz {
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-    }
-</style>
-</head>
-
-<body>
-    <main class="folha">
-        <section class="cartaz">
-            <div class="faixa-superior"></div>
-
-            <h1 class="marca">FIBRA<span>SOL</span></h1>
-
-            <div class="slogan">
-                QUALIDADE E AGILIDADE NA ENTREGA
-            </div>
-
-            <div class="separador"></div>
-
-            <div class="etiqueta">CREDENCIAMENTO OFICIAL</div>
-
-            <h2>A FIBRA NO DNA NORDESTINO</h2>
-
-            <p class="subtitulo">
-                Faça seu cadastro e venha se conectar com a
-                FibraSol neste momento especial!
-            </p>
-
-            <div class="qr-moldura">
-                <div class="qr-fundo">
                     <img
                         id="qr-impressao"
-                        src="${qr}"
-                        alt="QR Code oficial FibraSol"
+                        alt="QR Code para cadastro de participantes"
                     >
-                </div>
-            </div>
 
-            <div class="chamada">
-                ESCANEIE E FAÇA SEU CADASTRO
-            </div>
+                    <div class="endereco">${enderecoPagina}</div>
+                </main>
+            </body>
+            </html>
+        `);
 
-            <div class="instrucao">
-                Aponte a câmera do celular para o QR Code.
-            </div>
+        janelaImpressao.document.close();
 
-            <div class="rodape">
-                FIBRASOL • CONECTANDO PESSOAS E CRIANDO VALOR
-            </div>
-        </section>
-    </main>
+        const imagemImpressao =
+            janelaImpressao.document.getElementById("qr-impressao");
 
-<script>
-    let iniciado = false;
+        let impressaoIniciada = false;
 
-    function iniciar() {
-        if (iniciado) return;
-        iniciado = true;
+        function iniciarImpressao() {
 
-        setTimeout(() => {
-            window.focus();
-            window.print();
-        }, 400);
-    }
+            if (impressaoIniciada) return;
+            if (janelaImpressao.closed) {
+                window.__impressaoTotemEmAndamento = false;
+                return;
+            }
 
-    const qrImg = document.getElementById("qr-impressao");
+            impressaoIniciada = true;
 
-    qrImg.addEventListener("load", iniciar, { once: true });
+            janelaImpressao.focus();
 
-    qrImg.addEventListener("error", () => {
-        alert("Não foi possível carregar o QR Code.");
-    }, { once: true });
+            window.setTimeout(function () {
 
-    window.addEventListener("afterprint", () => {
-        window.__impressaoTotemEmAndamento = false;
-    });
+                if (janelaImpressao.closed) {
+                    window.__impressaoTotemEmAndamento = false;
+                    return;
+                }
 
-    if (qrImg.complete && qrImg.naturalWidth > 0) {
-        iniciar();
-    }
-</script>
-</body>
-</html>`);
-        janela.document.close();
-    }, 300);
+                try {
+
+                    janelaImpressao.print();
+
+                } catch (erro) {
+
+                    console.error("Erro ao imprimir:", erro);
+                    window.__impressaoTotemEmAndamento = false;
+
+                }
+
+            }, 300);
+        }
+
+        imagemImpressao.onload = iniciarImpressao;
+
+        imagemImpressao.onerror = function () {
+
+            window.__impressaoTotemEmAndamento = false;
+
+            alert(
+                "Não foi possível carregar o QR Code na página de impressão."
+            );
+
+        };
+
+        imagemImpressao.src = imagemQR;
+
+        // Libera uma nova tentativa quando a impressão terminar.
+        janelaImpressao.addEventListener("afterprint", function () {
+            window.__impressaoTotemEmAndamento = false;
+        });
+
+    }, 700);
 }
