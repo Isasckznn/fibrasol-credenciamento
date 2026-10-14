@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#002B66">
+  <meta name="description" content="Credenciamento oficial FibraSol. Cadastre-se para se conectar conosco.">
+  <title>Cadastro do Participante | FibraSol</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fibra: {
+              blue: '#002B66',
+              cyan: '#0066CC',
+              sky: '#00A8FF',
+              yellow: '#FFC800',
+              sand: '#F7E7CE',
+              beach: '#008080'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      background: #eaf6ff;
+    }
+
+    .cadastro-publico {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      min-height: 550px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 35px 16px 55px;
+      background:
+        linear-gradient(180deg,
+          #b9eaff 0%,
+          #e8f8ff 40%,
+          #72d1ed 62%,
+          #f7e7ce 63%,
+          #f5d5a0 100%);
+    }
+
+    .sol-publico {
+      position: absolute;
+      top: 35px;
+      right: 9%;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #ffc800;
+      box-shadow: 0 0 45px #ffd84f99;
+      animation: brilhoSol 4s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .nuvem-publica {
+      position: absolute;
+      width: 120px;
+      height: 30px;
+      background: #fff;
+      opacity: .8;
+      border-radius: 50px;
+      animation: moverNuvem 24s linear infinite;
+      z-index: -1;
+    }
+
+    .nuvem-publica::before,
+    .nuvem-publica::after {
+      content: "";
+      position: absolute;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .nuvem-publica::before {
+      width: 48px;
+      height: 48px;
+      left: 18px;
+      bottom: 5px;
+    }
+
+    .nuvem-publica::after {
+      width: 62px;
+      height: 62px;
+      right: 18px;
+      bottom: 0;
+    }
+
+    .nuvem-um {
+      top: 90px;
+      left: -140px;
+    }
+
+    .nuvem-dois {
+      top: 185px;
+      left: -220px;
+      transform: scale(.7);
+      animation-delay: -12s;
+    }
+
+    .onda-publica {
+      position: absolute;
+      left: -10%;
+      bottom: 28%;
+      width: 120%;
+      height: 45px;
+      border-radius: 50%;
+      background: #fff8;
+      transform: rotate(-2deg);
+      animation: moverOnda 7s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    .mascote-publico {
+      position: absolute;
+      left: max(3%, calc(50% - 550px));
+      bottom: 4%;
+      width: clamp(130px, 20vw, 250px);
+      max-height: 340px;
+      object-fit: contain;
+      object-position: bottom;
+      filter: drop-shadow(0 14px 18px #00335b33);
+      animation: flutuarMascote 4s ease-in-out infinite;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .cartao-cadastro {
+      width: min(100%, 610px);
+      padding: clamp(20px, 4vw, 36px);
+      border: 1px solid #ffffffc9;
+      border-radius: 28px;
+      background: #ffffffed;
+      box-shadow: 0 25px 65px #00335b26;
+      backdrop-filter: blur(15px);
+    }
+
+    .campo-publico {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      color: #1e293b;
+      background: #f8fafc;
+      border: 1px solid #dbe4ee;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    .campo-publico:focus {
+      background: #fff;
+      border-color: #0066cc;
+      box-shadow: 0 0 0 3px #00a8ff25;
+    }
+
+    .rotulo-publico {
+      display: block;
+      margin-bottom: 6px;
+      color: #334155;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .botao-publico:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
+    @keyframes brilhoSol {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    @keyframes moverNuvem {
+      from { translate: 0 0; }
+      to { translate: calc(100vw + 400px) 0; }
+    }
+
+    @keyframes moverOnda {
+      0%, 100% { transform: translateX(-2%) rotate(-2deg); }
+      50% { transform: translateX(2%) rotate(1deg); }
+    }
+
+    @keyframes flutuarMascote {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-9px); }
+    }
+
+    @media (max-width: 640px) {
+      .cadastro-publico {
+        min-height: 570px;
+        padding: 24px 12px 38px;
+      }
+
+      .mascote-publico {
+        left: -22px;
+        bottom: 0;
+        width: 135px;
+        opacity: .45;
+      }
+
+      .sol-publico {
+        width: 65px;
+        height: 65px;
+        top: 24px;
+        right: 8%;
+      }
+
+      .cartao-cadastro {
+        border-radius: 22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="text-slate-800 antialiased flex flex-col">
+
+  <header class="relative overflow-hidden bg-gradient-to-r from-fibra-blue via-fibra-cyan to-fibra-blue text-white border-b-4 border-fibra-yellow shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex flex-col items-center sm:items-start">
+        <div class="flex items-center gap-3">
+          <img
+            src="imagens/mascote-fibrasol.png"
+            alt="Mascote FibraSol"
+            class="w-14 h-14 object-contain"
+          >
+          <img
+            src="https://www.fibrasol.com.br/wp-content/themes/fibrasol/assets/images/marca.svg"
+            alt="FibraSol"
+            class="w-36 sm:w-44 max-h-14 object-contain"
+          >
+        </div>
+        <p class="text-[10px] sm:text-xs font-extrabold tracking-widest text-center sm:text-left mt-1">
+          QUALIDADE E AGILIDADE NA ENTREGA
+        </p>
+      </div>
+
+      <div class="text-center sm:text-right">
+        <p class="text-fibra-yellow font-black text-xs uppercase tracking-widest">
+          Credenciamento oficial
+        </p>
+        <p class="text-sm text-white/90 mt-1">
+          A fibra no DNA nordestino ☀️
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-fibra-blue/90 border-t border-white/10 py-2 overflow-hidden">
+      <div class="text-center text-[10px] sm:text-xs font-black uppercase tracking-wider text-fibra-yellow">
+        ☀️ A FIBRA NO DNA NORDESTINO &nbsp; • &nbsp;
+        🌊 CONECTANDO PESSOAS E CRIANDO VALOR &nbsp; • &nbsp;
+        💙 ORGULHO DE SER FIBRASOL!
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section id="painel-cadastro-publico" class="cadastro-publico">
+      <div class="sol-publico" aria-hidden="true"></div>
+      <div class="nuvem-publica nuvem-um" aria-hidden="true"></div>
+      <div class="nuvem-publica nuvem-dois" aria-hidden="true"></div>
+      <div class="onda-publica" aria-hidden="true"></div>
+
+      <img
+        src="imagens/mascote-fibrasol.png"
+        alt=""
+        aria-hidden="true"
+        class="mascote-publico"
+      >
+
+      <div class="cartao-cadastro relative z-10">
+        <div class="text-center mb-7">
+          <span class="inline-flex items-center gap-2 rounded-full bg-blue-50 text-fibra-blue px-4 py-2 text-[10px] font-black uppercase tracking-widest">
+            <i data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
+            Edição especial FibraSol
+          </span>
+
+          <h1 class="mt-4 text-2xl sm:text-3xl font-black text-fibra-blue leading-tight">
+            O NORDESTE CONECTADO AO FUTURO
+          </h1>
+
+          <p class="text-sm text-slate-500 mt-2">
+            Preencha seus dados para se conectar conosco.
+          </p>
+        </div>
+
+        <form id="form-cadastro-publico" class="space-y-4">
+          <div>
+            <label for="campo-nome" class="rotulo-publico">
+              Nome social *
+            </label>
+            <div class="relative">
+              <i data-lucide="user" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input
+                type="text"
+                id="campo-nome"
+                name="nome"
+                autocomplete="name"
+                maxlength="150"
+                required
+                placeholder="Informe seu nome social"
+                class="campo-publico pl-10"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label for="campo-razao-social" class="rotulo-publico">
+              Razão social
+            </label>
+            <div class="relative">
+              <i data-lucide="building-2" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input
+                type="text"
+                id="campo-razao-social"
+                name="razaoSocial"
+                autocomplete="organization"
+                maxlength="200"
+                placeholder="Nome da empresa, se aplicável"
+                class="campo-publico pl-10"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label for="campo-telefone" class="rotulo-publico">
+              Telefone / WhatsApp *
+            </label>
+            <div class="relative">
+              <i data-lucide="phone" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input
+                type="tel"
+                id="campo-telefone"
+                name="telefone"
+                autocomplete="tel"
+                inputmode="tel"
+                maxlength="15"
+                required
+                placeholder="(00) 00000-0000"
+                class="campo-publico pl-10"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label for="campo-endereco" class="rotulo-publico">
+              Endereço residencial ou comercial *
+            </label>
+            <div class="relative">
+              <i data-lucide="map-pin" class="w-5 h-5 absolute left-3 top-4 text-slate-400"></i>
+              <textarea
+                id="campo-endereco"
+                name="endereco"
+                autocomplete="street-address"
+                maxlength="500"
+                required
+                rows="2"
+                placeholder="Rua, número, bairro, cidade e estado"
+                class="campo-publico pl-10 resize-y"
+              ></textarea>
+            </div>
+          </div>
+
+          <p id="mensagem-erro" class="hidden rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-3" role="alert"></p>
+
+          <button
+            id="botao-enviar"
+            type="submit"
+            class="botao-publico w-full py-4 px-5 rounded-xl bg-gradient-to-r from-fibra-blue to-fibra-cyan text-white font-black text-sm sm:text-base uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-[.99] transition flex items-center justify-center gap-2"
+          >
+            <i data-lucide="check-circle-2" class="w-5 h-5 text-fibra-yellow"></i>
+            Confirmar credenciamento
+          </button>
+
+          <p class="text-[11px] text-center text-slate-400 flex items-center justify-center gap-2">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+            Seus dados são enviados com segurança para a FibraSol.
+          </p>
+        </form>
+
+        <section id="tela-sucesso-publica" class="hidden text-center py-5" aria-live="polite">
+          <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="check-circle-2" class="w-9 h-9"></i>
+          </div>
+          <h2 class="text-2xl font-black text-fibra-blue">CADASTRO REALIZADO!</h2>
+          <p class="text-fibra-cyan font-bold mt-2" id="nome-sucesso-publico"></p>
+          <p class="text-sm text-slate-500 mt-3 leading-relaxed">
+            Obrigado por se conectar com a FibraSol. Seus dados foram recebidos com sucesso.
+          </p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-fibra-blue text-white/70 py-4 border-t border-fibra-yellow/40 text-center text-xs font-semibold">
+    <p>FibraSol © 2026 — Qualidade e agilidade na entrega</p>
+    <p class="text-fibra-yellow mt-1">A fibra no DNA nordestino ☀️</p>
+  </footer>
+
+  <script>
+    // Use a URL BASE do projeto Supabase, sem /rest/v1/.
+    const SUPABASE_URL = 'https://uzxestnyraucgtwhmkoq.supabase.co';
+
+    // No painel Supabase, copie a chave Publishable do projeto.
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oiLfrqQtl-NwL4rqaP15JA_OOgJOuQW';
+
+    const clienteCadastro = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const formulario = document.getElementById('form-cadastro-publico');
+    const botaoEnviar = document.getElementById('botao-enviar');
+    const campoTelefone = document.getElementById('campo-telefone');
+    const mensagemErro = document.getElementById('mensagem-erro');
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+
+    campoTelefone.addEventListener('input', function () {
+      let numeros = this.value.replace(/\D/g, '').slice(0, 11);
+
+      if (numeros.length > 10) {
+        numeros = numeros.replace(
+          /^(\d{2})(\d{5})(\d{4}).*/,
+          '($1) $2-$3'
+        );
+      } else if (numeros.length > 6) {
+        numeros = numeros.replace(
+          /^(\d{2})(\d{4})(\d{0,4}).*/,
+          '($1) $2-$3'
+        );
+      } else if (numeros.length > 2) {
+        numeros = numeros.replace(/^(\d{2})(\d+)/, '($1) $2');
+      } else if (numeros.length > 0) {
+        numeros = numeros.replace(/^(\d*)/, '($1');
+      }
+
+      this.value = numeros;
+    });
+
+    function mostrarErro(mensagem) {
+      mensagemErro.textContent = mensagem;
+      mensagemErro.classList.remove('hidden');
+    }
+
+    formulario.addEventListener('submit', async function (evento) {
+      evento.preventDefault();
+      mensagemErro.textContent = '';
+      mensagemErro.classList.add('hidden');
+
+      const nome = document.getElementById('campo-nome').value.trim();
+      const razaoSocial = document.getElementById('campo-razao-social').value.trim();
+      const telefone = campoTelefone.value.trim();
+      const endereco = document.getElementById('campo-endereco').value.trim();
+
+      const digitosTelefone = telefone.replace(/\D/g, '');
+
+      if (!nome || !telefone || !endereco) {
+        mostrarErro('Preencha o nome social, o telefone e o endereço.');
+        return;
+      }
+
+      if (digitosTelefone.length < 10 || digitosTelefone.length > 11) {
+        mostrarErro('Informe um telefone válido com DDD.');
+        campoTelefone.focus();
+        return;
+      }
+
+      if (
+        !SUPABASE_PUBLISHABLE_KEY ||
+        SUPABASE_PUBLISHABLE_KEY === 'COLE_AQUI_SUA_CHAVE_PUBLICAVEL'
+      ) {
+        mostrarErro('A página ainda precisa ser configurada com a chave pública do Supabase.');
+        return;
+      }
+
+      botaoEnviar.disabled = true;
+      botaoEnviar.textContent = 'Enviando cadastro...';
+
+      try {
+        const { error } = await clienteCadastro
+          .from('cadastros')
+          .insert([{
+            nome: nome,
+            razao_social: razaoSocial || null,
+            telefone: telefone,
+            endereco: endereco
+          }]);
+
+        if (error) {
+          console.error('Erro ao enviar cadastro:', error);
+          mostrarErro('Não foi possível concluir o cadastro agora. Confira sua conexão e tente novamente.');
+          return;
+        }
+
+        document.getElementById('nome-sucesso-publico').textContent = nome;
+        formulario.classList.add('hidden');
+        document.getElementById('tela-sucesso-publica').classList.remove('hidden');
+
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+
+      } catch (erro) {
+        console.error('Falha de conexão:', erro);
+        mostrarErro('Ocorreu um erro de conexão. Tente novamente.');
+      } finally {
+        botaoEnviar.disabled = false;
+        botaoEnviar.innerHTML =
+          '<i data-lucide="check-circle-2" class="w-5 h-5 text-fibra-yellow"></i> Confirmar credenciamento';
+
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
