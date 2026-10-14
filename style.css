@@ -1765,29 +1765,48 @@ header .header-wind-three {
         background: #ffffff !important;
     }
 
+    
     #qrcode-container {
         display: block !important;
+        position: relative !important;
         flex: 0 0 auto !important;
         width: 60mm !important;
         height: 60mm !important;
         max-width: none !important;
         margin: 0 auto !important;
         padding: 0 !important;
-        overflow: visible !important;
+        overflow: hidden !important;
         background: #ffffff !important;
     }
 
-    #qrcode-container img,
-    #qrcode-container canvas {
+    /* Mostra somente a imagem final do QR Code */
+    #qrcode-container img {
         display: block !important;
+        position: absolute !important;
+        inset: 0 !important;
         width: 60mm !important;
         height: 60mm !important;
         max-width: none !important;
         margin: 0 !important;
         padding: 0 !important;
-        object-fit: fill !important;
+        object-fit: contain !important;
         image-rendering: pixelated !important;
     }
+
+    /* Impede a impressão do canvas duplicado */
+    #qrcode-container canvas {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+
+    /* Impede que outros elementos QR dentro do contêiner
+       apareçam na impressão */
+    #qrcode-container > :not(img) {
+        display: none !important;
+    }
+
+
 
     #section-totem .fibrasol-qr-instruction {
         display: flex !important;

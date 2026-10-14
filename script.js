@@ -1019,51 +1019,88 @@ document.addEventListener("DOMContentLoaded", function () {
 
    
 
+
 /* ==========================================================
-   FIBRASOL — IMPRESSÃO DO TOTEM ORIGINAL
-   Preserva o layout e evita QR Code duplicado
+   FIBRASOL — IMPRESSÃO DO TOTEM ORIGINAL SEM QR DUPLICADO
    ========================================================== */
 
 function imprimirTotem() {
     if (window.__impressaoTotemEmAndamento) return;
 
     const totem = document.getElementById("section-totem");
-    const qr = document.getElementById("qrcode-container");
+    const container = document.getElementById("qrcode-container");
 
-    if (!totem || !qr) {
+    if (!totem || !container) {
         alert("Não foi possível localizar o Totem FIBRASOL.");
         return;
     }
 
-    // Garante que o QR Code já esteja pronto.
-    const imagemQR = qr.querySelector("img");
-    const canvasQR = qr.querySelector("canvas");
+    const imagemQR = container.querySelector("img");
 
-    if (
-        (!imagemQR || !imagemQR.src || imagemQR.style.display === "none") &&
-        (!canvasQR || !canvasQR.width)
-    ) {
-        alert("Aguarde o QR Code carregar e tente imprimir novamente.");
+    if (!imagemQR || !imagemQR.src) {
+        alert("Aguarde o QR Code carregar e tente novamente.");
         return;
     }
 
     window.__impressaoTotemEmAndamento = true;
 
-    // Marca o documento para impressão do próprio Totem.
-    document.body.classList.add("imprimindo-totem-fibrasol");
+    // Guarda os elementos que não devem aparecer na impressão.
+    const elementosRemovidos = [];
 
-    const finalizarImpressao = () => {
-        document.body.classList.remove("imprimindo-totem-fibrasol");
-        window.__impressaoTotemEmAndamento = false;
-        window.removeEventListener("afterprint", finalizarImpressao);
-    };
-
-    window.addEventListener("afterprint", finalizarImpressao);
-
-    // Dá tempo para o navegador aplicar o layout de impressão.
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            window.print();
+    function removerTemporariamente(elemento) {
+        elementosRemovidos.push({
+            elemento: elemento,
+            pai: elemento.parentNode,
+            proximo: elemento.nextSibling
         });
+
+        elemento.remove();
+    }
+
+    // O QRCode.js pode criar canvas e imagem para o mesmo código.
+    // Mantemos a imagem original e removemos temporariamente os canvas.
+    container.querySelectorAll("canvas").forEach(removerTemporariamente);
+
+    // Se houver imagens QR repetidas dentro do contêiner,
+    // mantém a primeira e remove apenas as cópias.
+    container.querySelectorAll("img").forEach((imagem, indice) => {
+        if (indice > 0) {
+            removerTemporariamente(imagem);
+        }
+    });
+
+    let finalizado = false;
+
+    function restaurar() {
+        if (finalizado) return;
+        finalizado = true;
+
+        elementosRemovidos.reverse().forEach(item => {
+            if (!item.pai) return;
+
+            if (item.proximo && item.proximo.parentNode === item.pai) {
+                item.pai.insertBefore(item.elemento, item.proximo);
+            } else {
+                item.pai.appendChild(item.elemento);
+            }
+        });
+
+        window.removeEventListener("afterprint", restaurar);
+        window.__impressaoTotemEmAndamento = false;
+    }
+
+    window.addEventListener("afterprint", restaurar);
+
+    // Imprime o cartão original, sem criar outra página.
+    requestAnimationFrame(() => {
+        window.print();
+
+        // Recuperação caso o navegador não dispare afterprint.
+        setTimeout(() => {
+            if (window.__impressaoTotemEmAndamento) {
+                restaurar();
+            }
+        }, 30000);
     });
 }
+
