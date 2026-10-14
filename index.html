@@ -11,7 +11,23 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- QRCode.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Supabase: conexão com o banco de dados -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+  // ==========================================
+  // CONEXÃO COM O BANCO DE DADOS FIBRASOL
+  // ==========================================
+
+  const SUPABASE_URL = 'https://uzxestnyraucgtwhmkoq.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_oiLfrqQtl-NwL4rqaP15JA_OOgJOuQW';
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+</script>
+  
   <script>
     tailwind.config = {
       theme: {
@@ -369,7 +385,7 @@
 
                 
               <img
-                  src="https://raw.githubusercontent.com/a-g-a-p-i-t-o/storage/main/fibrasol_mascotte.jpg"
+                  src="imagens/mascote-fibrasol.png"
                   alt=""
                   class="fibrasol-qr-mascote"
                   loading="lazy"
@@ -501,24 +517,62 @@
 
   </main>
 
-  <!-- MODAL DE AUTENTICAÇÃO ADMINISTRATIVA -->
-  <div id="modal-auth" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-    <div class="glass-card max-w-sm w-full p-6 rounded-3xl shadow-2xl border-2 border-fibra-yellow text-center space-y-4">
-      <div class="w-12 h-12 bg-fibra-blue text-fibra-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
-        <i data-lucide="lock" class="w-6 h-6"></i>
-      </div>
-      <div>
-        <h3 class="text-lg font-black text-fibra-blue">Acesso Restrito Admin</h3>
-        <p class="text-xs text-slate-500 mt-1">Informe a senha para gerenciar os cadastros</p>
-      </div>
-      <input type="password" id="senha-admin" placeholder="Digite a senha..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-sm font-bold focus:ring-2 focus:ring-fibra-cyan outline-none">
-      <div class="flex gap-2">
-        <button onclick="fecharModalAuth()" class="flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs">Cancelar</button>
-        <button onclick="validarSenhaAdmin()" class="flex-1 py-2.5 bg-fibra-blue hover:bg-fibra-cyan text-white font-bold rounded-xl text-xs shadow-md">Entrar</button>
-      </div>
-      <p class="text-[10px] text-slate-400">Dica de demonstração: <span class="font-bold text-slate-600">fibrasol2026</span></p>
+  
+<!-- MODAL DE AUTENTICAÇÃO ADMINISTRATIVA -->
+<div id="modal-auth" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+  <div class="glass-card max-w-sm w-full p-6 rounded-3xl shadow-2xl border-2 border-fibra-yellow text-center space-y-4">
+
+    <div class="w-12 h-12 bg-fibra-blue text-fibra-yellow rounded-2xl flex items-center justify-center mx-auto shadow-md">
+      <i data-lucide="lock" class="w-6 h-6"></i>
     </div>
+
+    <div>
+      <h3 class="text-lg font-black text-fibra-blue">Acesso Restrito Admin</h3>
+      <p class="text-xs text-slate-500 mt-1">
+        Entre com seu e-mail e senha de administrador
+      </p>
+    </div>
+
+    <form id="form-login-admin" onsubmit="validarSenhaAdmin(event)" class="space-y-3">
+
+      <input
+        type="email"
+        id="email-admin"
+        autocomplete="username"
+        required
+        placeholder="Seu e-mail de administrador"
+        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-sm font-bold focus:ring-2 focus:ring-fibra-cyan outline-none"
+      >
+
+      <input
+        type="password"
+        id="senha-admin"
+        autocomplete="current-password"
+        required
+        placeholder="Sua senha"
+        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-sm font-bold focus:ring-2 focus:ring-fibra-cyan outline-none"
+      >
+
+      <div class="flex gap-2">
+        <button
+          type="button"
+          onclick="fecharModalAuth()"
+          class="flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          class="flex-1 py-2.5 bg-fibra-blue hover:bg-fibra-cyan text-white font-bold rounded-xl text-xs shadow-md"
+        >
+          Entrar
+        </button>
+      </div>
+
+    </form>
   </div>
+</div>
 
   <!-- RODAPÉ DA EMPRESA -->
   <footer class="bg-fibra-blue text-white/70 py-4 border-t border-white/10 text-center text-xs font-semibold mt-auto">

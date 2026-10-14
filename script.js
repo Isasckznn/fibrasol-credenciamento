@@ -4,74 +4,15 @@
    ========================================================== */
 
 
+
 /* ==========================================================
-   1. INICIALIZAÇÃO E ARMAZENAMENTO
+   1. INICIALIZAÇÃO E ARMAZENAMENTO — SUPABASE
    ========================================================== */
 
-const CHAVE_CADASTROS = "fibrasol_cadastros";
+// Os cadastros oficiais serão carregados do banco Supabase.
+// Não criar participantes fictícios nem salvar dados localmente.
 
-function carregarCadastros() {
-    try {
-        const dados = localStorage.getItem(CHAVE_CADASTROS);
-
-        if (dados === null) {
-            const demonstracao = [
-                {
-                    id: 1,
-                    nome: "Carlos Eduardo Silva",
-                    telefone: "(83) 98877-6655",
-                    endereco: "Av. Beira Mar, 102 - Praia de Tambaú, João Pessoa - PB",
-                    data: "09/10/2026 14:30"
-                },
-                {
-                    id: 2,
-                    nome: "Mariana Costa Rêgo",
-                    telefone: "(81) 99123-4567",
-                    endereco: "Rua do Sol, 45 - Boa Viagem, Recife - PE",
-                    data: "09/10/2026 15:15"
-                }
-            ];
-
-            localStorage.setItem(
-                CHAVE_CADASTROS,
-                JSON.stringify(demonstracao)
-            );
-
-            return demonstracao;
-        }
-
-        const registros = JSON.parse(dados);
-
-        return Array.isArray(registros) ? registros : [];
-
-    } catch (erro) {
-        console.error("Erro ao carregar os cadastros:", erro);
-        return [];
-    }
-}
-
-let cadastros = carregarCadastros();
-
-function salvarNoArmazenamento() {
-    try {
-        localStorage.setItem(
-            CHAVE_CADASTROS,
-            JSON.stringify(cadastros)
-        );
-
-        return true;
-
-    } catch (erro) {
-        console.error("Erro ao salvar os cadastros:", erro);
-
-        alert(
-            "Não foi possível salvar os dados neste navegador. " +
-            "Verifique o espaço disponível e as permissões de armazenamento."
-        );
-
-        return false;
-    }
-}
+let cadastros = [];
 
 
 /* ==========================================================
@@ -96,7 +37,32 @@ document.addEventListener("DOMContentLoaded", function () {
    3. NAVEGAÇÃO ENTRE AS TELAS
    ========================================================== */
 
-function switchTab(tab) {
+async function switchTab(tab) {
+    // O painel administrativo exige uma sessão autenticada.
+    if (tab === "admin") {
+        if (
+            typeof supabaseClient === "undefined" ||
+            !supabaseClient
+        ) {
+            alert("A conexão com o sistema não está disponível.");
+            return;
+        }
+
+        try {
+            const { data, error } =
+                await supabaseClient.auth.getSession();
+
+            if (error || !data.session) {
+                openAdminAuth();
+                return;
+            }
+        } catch (erro) {
+            console.error("Erro ao verificar a sessão:", erro);
+            alert("Não foi possível verificar seu acesso. Tente novamente.");
+            return;
+        }
+    }
+
     const secoes = [
         "section-cadastro",
         "section-sucesso",
@@ -135,7 +101,7 @@ function switchTab(tab) {
             secao.classList.remove("hidden");
         }
 
-        renderizarTabela();
+        await carregarCadastrosDaNuvem();
     }
 
     atualizarIcones();
@@ -182,28 +148,26 @@ function mascaraTelefone(input) {
 }
 
 
+
 /* ==========================================================
-   5. CADASTRO DE PARTICIPANTES
+   5. CADASTRO DE PARTICIPANTES — SUPABASE
    ========================================================== */
 
-function salvarCadastro(evento) {
+async function salvarCadastro(evento) {
     if (evento) {
         evento.preventDefault();
     }
 
-  
     const campoNome = document.getElementById("campo-nome");
     const campoRazaoSocial = document.getElementById("campo-razao-social");
     const campoTelefone = document.getElementById("campo-telefone");
     const campoEndereco = document.getElementById("campo-endereco");
-
 
     if (!campoNome || !campoTelefone || !campoEndereco) {
         alert("Não foi possível localizar todos os campos do cadastro.");
         return;
     }
 
-  
     const nome = campoNome.value.trim();
     const razaoSocial = campoRazaoSocial
         ? campoRazaoSocial.value.trim()
@@ -224,67 +188,80 @@ function salvarCadastro(evento) {
         return;
     }
 
-    const agora = new Date();
-
-    const dataFormatada =
-        agora.toLocaleDateString("pt-BR") + " " +
-        agora.toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit"
-        });
-
-  
-    const novoCadastro = {
-        id: Date.now(),
-        nome: nome,
-        razaoSocial: razaoSocial,
-        telefone: telefone,
-        endereco: endereco,
-        data: dataFormatada
-    };
-
-
-    cadastros.unshift(novoCadastro);
-
-    if (!salvarNoArmazenamento()) {
-        cadastros.shift();
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+        alert("Não foi possível conectar ao sistema. Tente novamente.");
         return;
     }
 
-    const nomeSucesso = document.getElementById("nome-sucesso");
+    const botaoEnviar = document.querySelector(
+        '#form-cadastro button[type="submit"], #form-cadastro input[type="submit"]'
+    );
 
-    if (nomeSucesso) {
-        nomeSucesso.textContent = nome;
+    if (botaoEnviar) {
+        botaoEnviar.disabled = true;
     }
 
-    const formulario = document.getElementById("form-cadastro");
+    try {
+        const { error } = await supabaseClient
+            .from("cadastros")
+            .insert([
+                {
+                    nome: nome,
+                    razao_social: razaoSocial || null,
+                    telefone: telefone,
+                    endereco: endereco
+                }
+            ]);
 
-    if (formulario) {
-        formulario.reset();
-    }
+        if (error) {
+            console.error("Erro ao salvar cadastro:", error);
+            alert(
+                "Não foi possível concluir seu cadastro. " +
+                "Verifique sua conexão e tente novamente."
+            );
+            return;
+        }
 
-    switchTab("cadastro");
+        const nomeSucesso = document.getElementById("nome-sucesso");
 
-    const secaoCadastro = document.getElementById("section-cadastro");
-    const secaoSucesso = document.getElementById("section-sucesso");
+        if (nomeSucesso) {
+            nomeSucesso.textContent = nome;
+        }
 
-    if (secaoCadastro) {
-        secaoCadastro.classList.add("hidden");
-    }
+        const formulario = document.getElementById("form-cadastro");
 
-    if (secaoSucesso) {
-        secaoSucesso.classList.remove("hidden");
+        if (formulario) {
+            formulario.reset();
+        }
+
+        switchTab("cadastro");
+
+        const secaoCadastro = document.getElementById("section-cadastro");
+        const secaoSucesso = document.getElementById("section-sucesso");
+
+        if (secaoCadastro) {
+            secaoCadastro.classList.add("hidden");
+        }
+
+        if (secaoSucesso) {
+            secaoSucesso.classList.remove("hidden");
+        }
+
+    } catch (erro) {
+        console.error("Falha inesperada no cadastro:", erro);
+        alert("Ocorreu um erro de conexão. Tente novamente.");
+    } finally {
+        if (botaoEnviar) {
+            botaoEnviar.disabled = false;
+        }
     }
 }
-
-
-function novoCadastro() {
-    switchTab("cadastro");
-}
-
 
 /* ==========================================================
-   6. GERAÇÃO DO QR CODE
+   6. GERAÇÃO DO QR CODE — CADASTRO PÚBLICO FIBRASOL
    ========================================================== */
 
 let qrInstancia = null;
@@ -313,7 +290,13 @@ function gerarQRCode() {
         return;
     }
 
-    const enderecoPagina = window.location.href;
+    // O QR Code deve abrir a página pública de cadastro.
+    // cadastro.html precisa estar hospedado no mesmo diretório
+    // da página que contém o painel administrativo.
+    const enderecoPagina = new URL(
+        "cadastro.html",
+        window.location.href
+    ).href;
 
     try {
         qrInstancia = new QRCode(container, {
@@ -333,65 +316,121 @@ function gerarQRCode() {
     }
 }
 
-
 /* ==========================================================
-   7. AUTENTICAÇÃO DO PAINEL ADMINISTRATIVO
+   7. AUTENTICAÇÃO DO PAINEL ADMINISTRATIVO — SUPABASE
    ========================================================== */
 
 function openAdminAuth() {
     const modal = document.getElementById("modal-auth");
+    const campoEmail = document.getElementById("email-admin");
     const campoSenha = document.getElementById("senha-admin");
 
-    if (!modal || !campoSenha) {
+    if (!modal || !campoEmail || !campoSenha) {
         alert("Não foi possível abrir a autenticação administrativa.");
-        console.error("Confira os IDs modal-auth e senha-admin no index.html.");
+        console.error("Confira os IDs do modal de autenticação no index.html.");
         return;
     }
 
     modal.classList.remove("hidden");
+    campoEmail.value = "";
     campoSenha.value = "";
-    campoSenha.focus();
+    campoEmail.focus();
 }
-
 
 function fecharModalAuth() {
     const modal = document.getElementById("modal-auth");
-    const campoSenha = document.getElementById("senha-admin");
+    const formulario = document.getElementById("form-login-admin");
 
     if (modal) {
         modal.classList.add("hidden");
     }
 
-    if (campoSenha) {
-        campoSenha.value = "";
+    if (formulario) {
+        formulario.reset();
     }
 }
 
+async function validarSenhaAdmin(evento) {
+    if (evento) {
+        evento.preventDefault();
+    }
 
-function validarSenhaAdmin() {
+    const campoEmail = document.getElementById("email-admin");
     const campoSenha = document.getElementById("senha-admin");
 
-    if (!campoSenha) {
-        alert("Campo de senha não encontrado.");
+    if (!campoEmail || !campoSenha) {
+        alert("Campos de acesso não encontrados.");
         return;
     }
 
+    const email = campoEmail.value.trim();
     const senha = campoSenha.value;
 
-    if (senha === "fibrasol2026" || senha === "admin") {
+    if (!email || !senha) {
+        alert("Informe seu e-mail e sua senha.");
+        return;
+    }
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+        alert("Conexão com o sistema indisponível. Tente novamente.");
+        return;
+    }
+
+    const botaoEntrar = document.querySelector(
+        '#form-login-admin button[type="submit"]'
+    );
+
+    if (botaoEntrar) {
+        botaoEntrar.disabled = true;
+        botaoEntrar.textContent = "Verificando...";
+    }
+
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: senha
+        });
+
+        if (error || !data.user) {
+            console.error("Falha no login administrativo:", error);
+            alert("Não foi possível entrar. Confira o e-mail e a senha.");
+            return;
+        }
+
         fecharModalAuth();
         switchTab("admin");
-    } else {
-        alert("Senha incorreta. Verifique a senha e tente novamente.");
-        campoSenha.value = "";
-        campoSenha.focus();
+
+    } catch (erro) {
+        console.error("Erro ao autenticar administrador:", erro);
+        alert("Erro de conexão ao verificar o acesso. Tente novamente.");
+    } finally {
+        if (botaoEntrar) {
+            botaoEntrar.disabled = false;
+            botaoEntrar.textContent = "Entrar";
+        }
     }
 }
 
+async function fecharAdmin() {
+    if (
+        typeof supabaseClient !== "undefined" &&
+        supabaseClient
+    ) {
+        const { error } = await supabaseClient.auth.signOut();
 
-function fecharAdmin() {
+        if (error) {
+            console.error("Erro ao encerrar sessão:", error);
+            alert("Não foi possível encerrar a sessão corretamente.");
+            return;
+        }
+    }
+
     switchTab("cadastro");
 }
+
 
 
 /* ==========================================================
@@ -410,6 +449,121 @@ function escapeHTML(valor) {
 
         return entidades[caractere];
     });
+}
+
+
+/* ==========================================================
+   CARREGAR CADASTROS DA NUVEM — SUPABASE
+   ========================================================== */
+
+async function carregarCadastrosDaNuvem() {
+    const tbody = document.getElementById("tabela-corpo");
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+        alert("A conexão com o banco de dados não está disponível.");
+        return;
+    }
+
+    if (tbody) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="p-8 text-center text-slate-500 font-bold">
+                    Carregando cadastros da nuvem...
+                </td>
+            </tr>
+        `;
+    }
+
+    try {
+        const { data: sessaoData, error: sessaoErro } =
+            await supabaseClient.auth.getSession();
+
+        if (sessaoErro || !sessaoData.session) {
+            cadastros = [];
+
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-8 text-center text-slate-500 font-bold">
+                            Entre como administrador para visualizar os cadastros.
+                        </td>
+                    </tr>
+                `;
+            }
+
+            openAdminAuth();
+            return;
+        }
+
+        const { data, error } = await supabaseClient
+            .from("cadastros")
+            .select("id, nome, razao_social, telefone, endereco, criado_em")
+            .order("criado_em", { ascending: false });
+
+        if (error) {
+            console.error("Erro ao carregar cadastros:", error);
+
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-8 text-center text-red-600 font-bold">
+                            Não foi possível carregar os cadastros.
+                        </td>
+                    </tr>
+                `;
+            }
+
+            alert(
+                "Não foi possível carregar os cadastros. " +
+                "Verifique se sua conta tem autorização."
+            );
+            return;
+        }
+
+        cadastros = (data || []).map(function (item) {
+            const dataCriacao = item.criado_em
+                ? new Date(item.criado_em)
+                : null;
+
+            const dataFormatada =
+                dataCriacao && !Number.isNaN(dataCriacao.getTime())
+                    ? dataCriacao.toLocaleDateString("pt-BR") + " " +
+                      dataCriacao.toLocaleTimeString("pt-BR", {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                      })
+                    : "";
+
+            return {
+                id: item.id,
+                nome: item.nome || "",
+                razaoSocial: item.razao_social || "",
+                telefone: item.telefone || "",
+                endereco: item.endereco || "",
+                data: dataFormatada
+            };
+        });
+
+        renderizarTabela(cadastros);
+
+    } catch (erro) {
+        console.error("Falha ao carregar cadastros:", erro);
+
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="p-8 text-center text-red-600 font-bold">
+                        Erro de conexão ao carregar os cadastros.
+                    </td>
+                </tr>
+            `;
+        }
+
+        alert("Erro de conexão ao carregar os cadastros.");
+    }
 }
 
 
@@ -460,7 +614,7 @@ function renderizarTabela(dados = cadastros) {
         tr.className =
             "hover:bg-slate-100/80 transition-colors border-b border-slate-200/60";
 
-        const idSeguro = Number(item.id) || 0;
+        const idSeguro = String(item.id);
 
         tr.innerHTML = `
             <td class="p-4 text-center">
@@ -503,7 +657,7 @@ function renderizarTabela(dados = cadastros) {
             <td class="p-4 text-center">
                 <button
                     type="button"
-                    onclick="excluirIndividual(${idSeguro})"
+                    onclick="excluirIndividual('${idSeguro}')"
                     class="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg transition-all"
                     title="Apagar registro"
                     aria-label="Apagar cadastro de ${escapeHTML(item.nome)}"
@@ -573,17 +727,39 @@ function atualizarBotaoExcluir() {
 }
 
 
+
 /* ==========================================================
-   12. EXCLUIR UM CADASTRO
+   12. EXCLUIR UM CADASTRO — SUPABASE
    ========================================================== */
 
-function excluirIndividual(id) {
+async function excluirIndividual(id) {
+    if (!id) {
+        alert("Identificador do cadastro inválido.");
+        return;
+    }
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+        alert("A conexão com o banco de dados não está disponível.");
+        return;
+    }
+
+    const { data: sessaoData, error: sessaoErro } =
+        await supabaseClient.auth.getSession();
+
+    if (sessaoErro || !sessaoData.session) {
+        alert("Sua sessão expirou. Entre novamente como administrador.");
+        return;
+    }
+
     const cadastroExiste = cadastros.some(function (item) {
-        return Number(item.id) === Number(id);
+        return String(item.id) === String(id);
     });
 
     if (!cadastroExiste) {
-        alert("Este cadastro não foi encontrado.");
+        alert("Este cadastro não foi encontrado na lista atual.");
         return;
     }
 
@@ -591,26 +767,45 @@ function excluirIndividual(id) {
         return;
     }
 
-    const cadastrosAnteriores = cadastros.slice();
+    try {
+        const { data, error } = await supabaseClient
+            .from("cadastros")
+            .delete()
+            .eq("id", id)
+            .select("id");
 
-    cadastros = cadastros.filter(function (item) {
-        return Number(item.id) !== Number(id);
-    });
+        if (error) {
+            console.error("Erro ao excluir cadastro:", error);
+            alert("Não foi possível excluir o cadastro.");
+            return;
+        }
 
-    if (!salvarNoArmazenamento()) {
-        cadastros = cadastrosAnteriores;
-        return;
+        if (!data || data.length === 0) {
+            alert(
+                "Nenhum registro foi excluído. " +
+                "Verifique sua autorização de administrador."
+            );
+            return;
+        }
+
+        cadastros = cadastros.filter(function (item) {
+            return String(item.id) !== String(id);
+        });
+
+        renderizarTabela();
+        alert("Cadastro excluído com sucesso.");
+
+    } catch (erro) {
+        console.error("Falha ao excluir cadastro:", erro);
+        alert("Erro de conexão ao excluir o cadastro.");
     }
-
-    renderizarTabela();
 }
 
-
 /* ==========================================================
-   13. EXCLUIR CADASTROS SELECIONADOS
+   13. EXCLUIR CADASTROS SELECIONADOS — SUPABASE
    ========================================================== */
 
-function excluirSelecionados() {
+async function excluirSelecionados() {
     const checkboxes = document.querySelectorAll(".check-item:checked");
 
     if (checkboxes.length === 0) {
@@ -618,32 +813,87 @@ function excluirSelecionados() {
         return;
     }
 
+    const idsParaRemover = Array.from(checkboxes)
+        .map(function (checkbox) {
+            return checkbox.dataset.id;
+        })
+        .filter(Boolean);
+
+    if (idsParaRemover.length === 0) {
+        alert("Não foi possível identificar os cadastros selecionados.");
+        return;
+    }
+
+    if (
+        typeof supabaseClient === "undefined" ||
+        !supabaseClient
+    ) {
+        alert("A conexão com o banco de dados não está disponível.");
+        return;
+    }
+
     if (!confirm(
         "Deseja realmente apagar os " +
-        checkboxes.length +
+        idsParaRemover.length +
         " cadastros selecionados?"
     )) {
         return;
     }
 
-    const idsParaRemover = Array.from(checkboxes).map(function (checkbox) {
-        return Number(checkbox.dataset.id);
-    });
+    try {
+        const { data: sessaoData, error: sessaoErro } =
+            await supabaseClient.auth.getSession();
 
-    const cadastrosAnteriores = cadastros.slice();
+        if (sessaoErro || !sessaoData.session) {
+            alert("Sua sessão expirou. Entre novamente como administrador.");
+            openAdminAuth();
+            return;
+        }
 
-    cadastros = cadastros.filter(function (item) {
-        return !idsParaRemover.includes(Number(item.id));
-    });
+        const { data, error } = await supabaseClient
+            .from("cadastros")
+            .delete()
+            .in("id", idsParaRemover)
+            .select("id");
 
-    if (!salvarNoArmazenamento()) {
-        cadastros = cadastrosAnteriores;
-        return;
+        if (error) {
+            console.error("Erro ao excluir cadastros:", error);
+            alert("Não foi possível excluir os cadastros selecionados.");
+            return;
+        }
+
+        const idsExcluidos = new Set(
+            (data || []).map(function (item) {
+                return String(item.id);
+            })
+        );
+
+        if (idsExcluidos.size === 0) {
+            alert(
+                "Nenhum cadastro foi excluído. " +
+                "Verifique sua autorização de administrador."
+            );
+            return;
+        }
+
+        cadastros = cadastros.filter(function (item) {
+            return !idsExcluidos.has(String(item.id));
+        });
+
+        renderizarTabela();
+
+        alert(
+            idsExcluidos.size +
+            (idsExcluidos.size === 1
+                ? " cadastro excluído com sucesso."
+                : " cadastros excluídos com sucesso.")
+        );
+
+    } catch (erro) {
+        console.error("Falha ao excluir cadastros:", erro);
+        alert("Erro de conexão ao excluir os cadastros.");
     }
-
-    renderizarTabela();
 }
-
 
 /* ==========================================================
    14. PESQUISA E FILTRO DA TABELA
@@ -676,13 +926,23 @@ function filtrarTabela() {
 }
 
 
+
 /* ==========================================================
    15. EXPORTAR CADASTROS PARA CSV / EXCEL
    ========================================================== */
 
 function exportarExcel() {
-    if (cadastros.length === 0) {
-        alert("Não há cadastros para exportar.");
+    if (!Array.isArray(cadastros) || cadastros.length === 0) {
+        alert("Não há cadastros carregados para exportar.");
+        return;
+    }
+
+    const botaoExportar = document.querySelector(
+        '[onclick="exportarExcel()"]'
+    );
+
+    if (botaoExportar && botaoExportar.disabled) {
+        alert("Aguarde o carregamento dos cadastros.");
         return;
     }
 
@@ -692,11 +952,11 @@ function exportarExcel() {
     cadastros.forEach(function (cadastro, indice) {
         const linha = [
             cadastros.length - indice,
-            cadastro.nome,
+            cadastro.nome || "",
             cadastro.razaoSocial || "",
-            cadastro.telefone,
-            cadastro.endereco,
-            cadastro.data
+            cadastro.telefone || "",
+            cadastro.endereco || "",
+            cadastro.data || ""
         ];
 
         const linhaCSV = linha.map(function (valor) {
