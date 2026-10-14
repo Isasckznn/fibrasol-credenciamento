@@ -1103,4 +1103,3 @@ function imprimirTotem() {
         }, 30000);
     });
 }
-

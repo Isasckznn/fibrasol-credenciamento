@@ -33,209 +33,471 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    body {
-      min-height: 100vh;
-      background: #eaf6ff;
+  
+/* =========================================================
+   FIBRASOL — PRAIA PREMIUM
+   CSS exclusivo da página cadastro.html
+   ========================================================= */
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: #eaf6ff;
+}
+
+/* CENÁRIO PRINCIPAL */
+
+.cadastro-publico {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 650px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px 80px;
+    background:
+        radial-gradient(
+            circle at 83% 12%,
+            rgba(255, 239, 163, .8) 0,
+            rgba(255, 239, 163, 0) 19%
+        ),
+        linear-gradient(
+            180deg,
+            #87d8f5 0%,
+            #d9f4ff 34%,
+            #effbff 46%,
+            #5bc6df 47%,
+            #159bbd 62%,
+            #f8e6c7 62.5%,
+            #f3d5a4 100%
+        );
+}
+
+.cadastro-publico::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        linear-gradient(
+            115deg,
+            rgba(255,255,255,.35),
+            transparent 42%,
+            rgba(255,255,255,.12)
+        );
+}
+
+.cadastro-publico::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: -10%;
+    bottom: 10%;
+    width: 120%;
+    height: 85px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    transform: rotate(-2deg);
+    pointer-events: none;
+}
+
+/* SOL */
+
+.sol-publico {
+    position: absolute;
+    top: 45px;
+    right: 11%;
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle at 32% 28%,
+            #fff9cf 0%,
+            #ffe77e 42%,
+            #ffc800 78%,
+            #f5a900 100%
+        );
+    box-shadow:
+        0 0 0 15px rgba(255, 222, 92, .18),
+        0 0 0 32px rgba(255, 222, 92, .1),
+        0 0 65px rgba(255, 203, 50, .35);
+    animation: brilhoSol 5s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* NUVENS */
+
+.nuvem-publica {
+    position: absolute;
+    width: 120px;
+    height: 30px;
+    background: rgba(255,255,255,.88);
+    border-radius: 50px;
+    filter: drop-shadow(0 8px 12px rgba(0, 80, 120, .06));
+    animation: moverNuvem 28s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.nuvem-publica::before,
+.nuvem-publica::after {
+    content: "";
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.nuvem-publica::before {
+    width: 48px;
+    height: 48px;
+    left: 18px;
+    bottom: 5px;
+}
+
+.nuvem-publica::after {
+    width: 62px;
+    height: 62px;
+    right: 18px;
+    bottom: 0;
+}
+
+.nuvem-um {
+    top: 100px;
+    left: -150px;
+}
+
+.nuvem-dois {
+    top: 205px;
+    left: -230px;
+    transform: scale(.7);
+    opacity: .75;
+    animation-delay: -13s;
+}
+
+/* ONDAS */
+
+.onda-publica {
+    position: absolute;
+    left: -10%;
+    bottom: 27%;
+    width: 120%;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.24);
+    transform: rotate(-2deg);
+    animation: moverOnda 8s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* MASCOTE */
+
+.mascote-publico {
+    position: absolute;
+    left: max(2%, calc(50% - 590px));
+    bottom: 2%;
+    width: clamp(180px, 24vw, 320px);
+    max-height: 390px;
+    object-fit: contain;
+    object-position: bottom center;
+    filter: drop-shadow(0 17px 18px rgba(0, 43, 102, .2));
+    animation: flutuarMascote 5s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* CARTÃO DO CADASTRO */
+
+.cartao-cadastro {
+    position: relative;
+    width: min(100%, 570px);
+    margin-left: auto;
+    margin-right: max(0px, calc((100% - 1120px) / 2));
+    padding: clamp(24px, 4vw, 38px);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.96);
+    border-radius: 25px;
+    background: rgba(255,255,255,.96);
+    box-shadow:
+        0 28px 75px rgba(0, 43, 102, .19),
+        0 5px 18px rgba(0, 43, 102, .06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    animation: entradaCartao .65s ease both;
+}
+
+.cartao-cadastro::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(
+        90deg,
+        #002B66,
+        #00A8FF 55%,
+        #FFC800
+    );
+}
+
+/* CAMPOS */
+
+.campo-publico {
+    display: block;
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 14px;
+    color: #173451;
+    background: #f7fafd;
+    border: 1px solid #dce7f1;
+    border-radius: 12px;
+    outline: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+.campo-publico::placeholder {
+    color: #9aaabd;
+}
+
+.campo-publico:hover {
+    border-color: #b7d2e9;
+    background: #fff;
+}
+
+.campo-publico:focus {
+    background: #fff;
+    border-color: #008bd2;
+    box-shadow: 0 0 0 4px rgba(0,168,255,.12);
+}
+
+.campo-publico:focus-visible {
+    outline: none;
+}
+
+textarea.campo-publico {
+    min-height: 75px;
+}
+
+/* RÓTULOS */
+
+.rotulo-publico {
+    display: block;
+    margin-bottom: 7px;
+    color: #27425e;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .075em;
+    text-transform: uppercase;
+}
+
+/* BOTÃO DE ENVIO */
+
+.botao-publico {
+    position: relative;
+    min-height: 53px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(110deg, #002B66, #0066CC 62%, #008fdc);
+    box-shadow: 0 10px 23px rgba(0, 75, 159, .2);
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease;
+}
+
+.botao-publico:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 28px rgba(0, 75, 159, .28);
+    filter: saturate(1.1);
+}
+
+.botao-publico:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.botao-publico:focus-visible {
+    outline: 3px solid rgba(0,168,255,.4);
+    outline-offset: 4px;
+}
+
+.botao-publico:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+/* ANIMAÇÕES */
+
+@keyframes brilhoSol {
+    0%, 100% {
+        transform: scale(1);
     }
 
+    50% {
+        transform: scale(1.055);
+    }
+}
+
+@keyframes moverNuvem {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: calc(100vw + 450px) 0;
+    }
+}
+
+@keyframes moverOnda {
+    0%, 100% {
+        transform: translateX(-2%) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateX(2%) rotate(1deg);
+    }
+}
+
+@keyframes flutuarMascote {
+    0%, 100% {
+        transform: translateY(0) rotate(-1deg);
+    }
+
+    50% {
+        transform: translateY(-9px) rotate(1deg);
+    }
+}
+
+@keyframes entradaCartao {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* TABLETS */
+
+@media (max-width: 900px) {
     .cadastro-publico {
-      position: relative;
-      isolation: isolate;
-      overflow: hidden;
-      min-height: 550px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 35px 16px 55px;
-      background:
-        linear-gradient(180deg,
-          #b9eaff 0%,
-          #e8f8ff 40%,
-          #72d1ed 62%,
-          #f7e7ce 63%,
-          #f5d5a0 100%);
-    }
-
-    .sol-publico {
-      position: absolute;
-      top: 35px;
-      right: 9%;
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: #ffc800;
-      box-shadow: 0 0 45px #ffd84f99;
-      animation: brilhoSol 4s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    .nuvem-publica {
-      position: absolute;
-      width: 120px;
-      height: 30px;
-      background: #fff;
-      opacity: .8;
-      border-radius: 50px;
-      animation: moverNuvem 24s linear infinite;
-      z-index: -1;
-    }
-
-    .nuvem-publica::before,
-    .nuvem-publica::after {
-      content: "";
-      position: absolute;
-      background: inherit;
-      border-radius: 50%;
-    }
-
-    .nuvem-publica::before {
-      width: 48px;
-      height: 48px;
-      left: 18px;
-      bottom: 5px;
-    }
-
-    .nuvem-publica::after {
-      width: 62px;
-      height: 62px;
-      right: 18px;
-      bottom: 0;
-    }
-
-    .nuvem-um {
-      top: 90px;
-      left: -140px;
-    }
-
-    .nuvem-dois {
-      top: 185px;
-      left: -220px;
-      transform: scale(.7);
-      animation-delay: -12s;
-    }
-
-    .onda-publica {
-      position: absolute;
-      left: -10%;
-      bottom: 28%;
-      width: 120%;
-      height: 45px;
-      border-radius: 50%;
-      background: #fff8;
-      transform: rotate(-2deg);
-      animation: moverOnda 7s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    .mascote-publico {
-      position: absolute;
-      left: max(3%, calc(50% - 550px));
-      bottom: 4%;
-      width: clamp(130px, 20vw, 250px);
-      max-height: 340px;
-      object-fit: contain;
-      object-position: bottom;
-      filter: drop-shadow(0 14px 18px #00335b33);
-      animation: flutuarMascote 4s ease-in-out infinite;
-      z-index: -1;
-      pointer-events: none;
+        min-height: 610px;
+        padding: 35px 22px 65px;
     }
 
     .cartao-cadastro {
-      width: min(100%, 610px);
-      padding: clamp(20px, 4vw, 36px);
-      border: 1px solid #ffffffc9;
-      border-radius: 28px;
-      background: #ffffffed;
-      box-shadow: 0 25px 65px #00335b26;
-      backdrop-filter: blur(15px);
+        width: min(100%, 530px);
+        margin-right: 0;
+    }
+
+    .mascote-publico {
+        left: -35px;
+        width: 200px;
+        opacity: .38;
+    }
+
+    .sol-publico {
+        width: 85px;
+        height: 85px;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 640px) {
+    .cadastro-publico {
+        min-height: 0;
+        padding: 28px 13px 54px;
+        background:
+            radial-gradient(
+                circle at 88% 7%,
+                rgba(255, 225, 110, .36),
+                transparent 22%
+            ),
+            linear-gradient(
+                180deg,
+                #a4e4f8 0%,
+                #e8f8ff 34%,
+                #70cfe3 47%,
+                #159bbd 62%,
+                #f7e7ce 62.5%,
+                #f5d5a0 100%
+            );
+    }
+
+    .sol-publico {
+        top: 25px;
+        right: 7%;
+        width: 65px;
+        height: 65px;
+    }
+
+    .nuvem-um {
+        top: 75px;
+    }
+
+    .nuvem-dois {
+        top: 155px;
+    }
+
+    .mascote-publico {
+        left: -24px;
+        bottom: 0;
+        width: 140px;
+        max-height: 200px;
+        opacity: .3;
+    }
+
+    .onda-publica {
+        bottom: 25%;
+    }
+
+    .cartao-cadastro {
+        width: 100%;
+        margin: 0;
+        padding: 25px 19px;
+        border-radius: 21px;
+        background: rgba(255,255,255,.97);
+        box-shadow: 0 20px 48px rgba(0,43,102,.17);
     }
 
     .campo-publico {
-      width: 100%;
-      min-height: 48px;
-      padding: 12px 14px;
-      color: #1e293b;
-      background: #f8fafc;
-      border: 1px solid #dbe4ee;
-      border-radius: 12px;
-      outline: none;
-      transition: border-color .2s, box-shadow .2s, background .2s;
+        min-height: 47px;
+        font-size: 13px;
+    }
+}
+
+/* ACESSIBILIDADE */
+
+@media (prefers-reduced-motion: reduce) {
+    .sol-publico,
+    .nuvem-publica,
+    .onda-publica,
+    .mascote-publico,
+    .cartao-cadastro {
+        animation: none !important;
     }
 
-    .campo-publico:focus {
-      background: #fff;
-      border-color: #0066cc;
-      box-shadow: 0 0 0 3px #00a8ff25;
-    }
-
-    .rotulo-publico {
-      display: block;
-      margin-bottom: 6px;
-      color: #334155;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-    }
-
-    .botao-publico:disabled {
-      opacity: .65;
-      cursor: wait;
-    }
-
-    @keyframes brilhoSol {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-
-    @keyframes moverNuvem {
-      from { translate: 0 0; }
-      to { translate: calc(100vw + 400px) 0; }
-    }
-
-    @keyframes moverOnda {
-      0%, 100% { transform: translateX(-2%) rotate(-2deg); }
-      50% { transform: translateX(2%) rotate(1deg); }
-    }
-
-    @keyframes flutuarMascote {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-9px); }
-    }
-
-    @media (max-width: 640px) {
-      .cadastro-publico {
-        min-height: 570px;
-        padding: 24px 12px 38px;
-      }
-
-      .mascote-publico {
-        left: -22px;
-        bottom: 0;
-        width: 135px;
-        opacity: .45;
-      }
-
-      .sol-publico {
-        width: 65px;
-        height: 65px;
-        top: 24px;
-        right: 8%;
-      }
-
-      .cartao-cadastro {
-        border-radius: 22px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
+    *,
+    *::before,
+    *::after {
         scroll-behavior: auto !important;
-      }
+        transition-duration: .01ms !important;
     }
+}
+
   </style>
 </head>
 
