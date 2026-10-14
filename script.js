@@ -1022,30 +1022,45 @@ document.addEventListener("DOMContentLoaded", function () {
    FIBRASOL — IMPRESSÃO DO TOTEM
    ========================================================== */
 
-
 function imprimirTotem() {
     const secaoTotem = document.getElementById("section-totem");
+    const container = document.getElementById("qrcode-container");
 
-    if (!secaoTotem) {
-        alert("Não foi possível encontrar o cartão do Totem QR.");
+    if (!secaoTotem || !container) {
+        alert("Não foi possível encontrar a área do Totem QR.");
         return;
     }
 
-    if (typeof gerarQRCode === "function") {
-        gerarQRCode();
+    if (typeof QRCode === "undefined") {
+        alert("O gerador de QR Code não foi carregado. Recarregue a página.");
+        return;
     }
 
+    // Endereço oficial da página pública de cadastro
+    const enderecoPagina =
+        "https://isasckznn.github.io/fibrasol-credenciamento/cadastro.html";
+
+    // Gera novamente o QR Code com o endereço correto
+    container.innerHTML = "";
+
+    new QRCode(container, {
+        text: enderecoPagina,
+        width: 320,
+        height: 320,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Aguarda a geração do QR Code antes de abrir a impressão
     window.setTimeout(function () {
-        const qrCode = document.querySelector(
-            "#qrcode-container img, #qrcode-container canvas"
-        );
+        const qrCode = container.querySelector("canvas, img");
 
         if (!qrCode) {
-            alert("O QR Code não foi gerado. Abra a aba Totem QR e tente novamente.");
+            alert("O QR Code não foi gerado. Tente novamente.");
             return;
         }
 
         window.print();
-    }, 500);
+    }, 1000);
 }
-
