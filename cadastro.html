@@ -723,6 +723,134 @@ footer {
     }
 }
 
+/* =====================================================
+   CABEÇALHO FIBRASOL — IDENTIDADE PREMIUM
+   Acrescentar ao final do style existente
+   ===================================================== */
+
+header:first-of-type > div:first-child {
+    min-height: 112px;
+    padding-top: 17px;
+    padding-bottom: 17px;
+}
+
+header:first-of-type > div:first-child > div:first-child > div {
+    gap: 15px;
+}
+
+header:first-of-type > div:first-child > div:first-child > p {
+    margin-top: 4px;
+    padding-left: 4px;
+    color: rgba(255,255,255,.82);
+    font-size: 10px;
+    letter-spacing: .16em;
+}
+
+header:first-of-type > div:first-child > div:last-child {
+    max-width: 390px;
+    padding: 12px 17px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 16px;
+    background: rgba(255,255,255,.07);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+header:first-of-type > div:first-child > div:last-child > p:first-child {
+    color: #ffd83d;
+    font-size: 10px;
+    letter-spacing: .19em;
+}
+
+header:first-of-type > div:first-child > div:last-child > p:last-child {
+    margin-top: 5px;
+    color: #fff;
+    font-size: clamp(12px, 1.2vw, 15px);
+    font-weight: 900;
+    line-height: 1.4;
+    letter-spacing: .015em;
+}
+
+header > div:last-child {
+    background:
+        linear-gradient(90deg, #001638, #003875 50%, #001638) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+header > div:last-child > div {
+    color: #ffda47 !important;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-shadow: 0 0 16px rgba(255,200,0,.15);
+}
+
+/* DESTAQUE NA CHAMADA DO EVENTO */
+
+.chamada-praia h2 {
+    text-wrap: balance;
+    text-shadow: 0 3px 0 rgba(255,255,255,.22);
+}
+
+.chamada-praia p {
+    color: #194663;
+    font-size: 15px;
+    line-height: 1.85;
+}
+
+.chamada-praia p strong {
+    display: inline;
+    color: #003c80;
+    font-weight: 900;
+}
+
+/* CELULAR: MARCA GRANDE E CABEÇALHO ORGANIZADO */
+
+@media (max-width: 640px) {
+    header:first-of-type > div:first-child {
+        gap: 12px;
+        padding: 16px 12px;
+    }
+
+    header:first-of-type > div:first-child > div:first-child {
+        width: 100%;
+    }
+
+    header:first-of-type > div:first-child > div:first-child > div {
+        justify-content: center;
+        gap: 12px;
+    }
+
+    header:first-of-type > div:first-child > div:first-child > p {
+        font-size: 9px;
+        text-align: center;
+        letter-spacing: .12em;
+    }
+
+    header:first-of-type > div:first-child > div:last-child {
+        width: 100%;
+        max-width: 420px;
+        padding: 11px 12px;
+        text-align: center;
+    }
+
+    header:first-of-type > div:first-child > div:last-child > p:first-child {
+        font-size: 9px;
+    }
+
+    header:first-of-type > div:first-child > div:last-child > p:last-child {
+        font-size: 14px;
+        letter-spacing: .025em;
+    }
+
+    header > div:last-child > div {
+        font-size: 10px;
+        letter-spacing: .08em;
+    }
+
+    .chamada-praia p {
+        font-size: 13px;
+        line-height: 1.7;
+    }
+}
 
   </style>
 </head>
@@ -736,12 +864,12 @@ footer {
           <img
             src="imagens/mascote-fibrasol.png"
             alt="Mascote FibraSol"
-            class="w-14 h-14 object-contain"
+            class="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-lg shrink-0"
           >
           <img
             src="https://www.fibrasol.com.br/wp-content/themes/fibrasol/assets/images/marca.svg"
             alt="FibraSol"
-            class="w-36 sm:w-44 max-h-14 object-contain"
+            class="w-48 sm:w-60 max-h-20 object-contain drop-shadow-sm"
           >
         </div>
         <p class="text-[10px] sm:text-xs font-extrabold tracking-widest text-center sm:text-left mt-1">
@@ -754,7 +882,7 @@ footer {
           Credenciamento oficial
         </p>
         <p class="text-sm text-white/90 mt-1">
-          A fibra no DNA nordestino ☀️
+          ATIVE A FIBRA QUE FALTA NO SEU DNA! ⚡
         </p>
       </div>
     </div>
@@ -792,11 +920,12 @@ footer {
           <span>FUTURO.</span>
         </h2>
 
-        <p>
-          Gente, conexão e novas oportunidades.
-          Faça seu credenciamento e venha fazer parte
-          dessa experiência com a FibraSol!
-        </p>
+          <p>
+            Um encontro de conexões, ideias e oportunidades.
+            Pessoas que se unem, compartilham valores e abrem
+            caminhos para um futuro que vai mais longe.
+            <strong>Essa é a energia FibraSol!</strong>
+          </p>
 
         <div class="traco-amarelo"></div>
       </div>
